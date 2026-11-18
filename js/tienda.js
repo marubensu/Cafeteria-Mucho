@@ -40,6 +40,7 @@
           <h3 class="plato-card__nombre"><button type="button" class="plato-card__abrir" data-abrir="${p.id}">${escapar(p.nombre)}</button></h3>
           <p class="plato-card__desc">${escapar(p.descripcion)}</p>
           ${p.ejemplo ? '<p class="producto-card__ejemplo">Producto de ejemplo</p>' : ''}
+          ${p.fotoProvisoria ? '<p class="producto-card__ejemplo">Foto provisoria</p>' : ''}
           <div class="plato-card__pie">
             <span class="producto-card__precio ${typeof p.precio === 'number' ? 'precio' : ''}">${textoPrecio(p)}</span>
             <div class="producto-card__accion" data-accion="${p.id}"></div>
@@ -134,7 +135,7 @@
             <span class="ficha-producto__etiqueta">${{ docena: 'Docenas', peso: 'Bolsas', unidad: 'Cantidad' }[p.venta]}</span>
             <div class="contador">
               <button type="button" data-paso="-1" aria-label="Quitar uno">–</button>
-              <output name="cantidad" aria-live="polite">1</output>
+              <input type="number" name="cantidad" value="1" min="1" max="999" step="1" inputmode="numeric" aria-label="Cantidad">
               <button type="button" data-paso="1" aria-label="Sumar uno">+</button>
             </div>
           </div>
@@ -143,11 +144,14 @@
       </form>`;
 
     const $form = $fichaCuerpo.querySelector('form');
-    const $cantidad = $form.querySelector('output');
+    const $cantidad = $form.querySelector('input[name="cantidad"]');
+    const leerCantidad = () => Math.max(1, Math.min(999, Math.round(Number($cantidad.value)) || 1));
     $form.addEventListener('click', (e) => {
       const b = e.target.closest('[data-paso]');
-      if (b) $cantidad.value = Math.max(1, Math.min(99, Number($cantidad.value) + Number(b.dataset.paso)));
+      if (b) $cantidad.value = Math.max(1, Math.min(999, leerCantidad() + Number(b.dataset.paso)));
     });
+    // Si escriben algo fuera de rango, se corrige al salir del campo
+    $cantidad.addEventListener('change', () => { $cantidad.value = leerCantidad(); });
     $form.addEventListener('submit', (e) => {
       e.preventDefault();
       const datos = new FormData($form);
@@ -155,7 +159,7 @@
         id: p.id,
         peso: p.venta === 'peso' ? Number(datos.get('peso') || p.pesos[0]) : null,
         opcion: datos.get('opcion') || null,
-        cantidad: Number($cantidad.value)
+        cantidad: leerCantidad()
       });
       $ficha.close();
     });

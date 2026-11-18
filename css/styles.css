@@ -909,6 +909,14 @@ body.pagina-encargos::before {
 }
 .contador button:hover { background: var(--arena); }
 .contador button svg { width: 18px; height: 18px; }
+.contador input {
+  width: 52px; padding: 0; border: 0; background: none; text-align: center;
+  font-family: var(--fuente-titulos); font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield; appearance: textfield;
+}
+.contador input::-webkit-outer-spin-button, .contador input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.contador input:focus { outline: none; }
+.contador:has(input:focus-visible) { outline: 2px solid var(--cafe); outline-offset: 2px; }
 .contador output {
   min-width: 24px; text-align: center;
   font-family: var(--fuente-titulos); font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums;

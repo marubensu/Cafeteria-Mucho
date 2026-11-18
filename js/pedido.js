@@ -60,7 +60,7 @@
     cantidadDe: (l) => (lineas.find((x) => claveLinea(x) === claveLinea(l)) || {}).cantidad || 0,
     agregar(linea) {
       const existente = lineas.find((x) => claveLinea(x) === claveLinea(linea));
-      if (existente) existente.cantidad = Math.min(99, existente.cantidad + linea.cantidad);
+      if (existente) existente.cantidad = Math.min(999, existente.cantidad + linea.cantidad);
       else lineas.push({ id: linea.id, peso: linea.peso || null, opcion: linea.opcion || null, cantidad: linea.cantidad });
       avisar();
       mostrarAviso(productos[linea.id].nombre);
@@ -69,7 +69,7 @@
     cambiar(linea, cantidad) {
       const i = lineas.findIndex((x) => claveLinea(x) === claveLinea(linea));
       if (cantidad <= 0) { if (i > -1) lineas.splice(i, 1); }
-      else if (i > -1) lineas[i].cantidad = Math.min(99, cantidad);
+      else if (i > -1) lineas[i].cantidad = Math.min(999, cantidad);
       else lineas.push({ id: linea.id, peso: linea.peso || null, opcion: linea.opcion || null, cantidad });
       avisar();
     },

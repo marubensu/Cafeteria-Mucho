@@ -156,7 +156,7 @@ const MUCHO = {
     whatsapp: '5491176167815', // [a validar] ¿la proveeduría usa otro número?
     secciones: [
       { id: 'cafe', nombre: 'Café para casa', bajada: 'Nuestro café, en grano o molido para tu método.' },
-      { id: 'proveeduria', nombre: 'Proveeduría', bajada: 'Por docena, por kilo o por unidad. Mayorista y minorista.' }
+      { id: 'proveeduria', nombre: 'Proveeduría', bajada: 'Por docena o por unidad. Mayorista y minorista.' }
     ],
     productos: [
       // Café para casa
@@ -164,16 +164,13 @@ const MUCHO = {
       { id: 'origen-del-mes', seccion: 'cafe', nombre: 'Origen del mes', descripcion: 'Un café de origen único que rotamos según la temporada. Preguntanos cuál tenemos hoy.', contenido: 'Bolsa de 250 g', venta: 'peso', pesos: [250], opciones: { nombre: 'Molienda', valores: ['En grano', 'Espresso', 'Filtro (V60 / Chemex)', 'Prensa francesa', 'Moka / italiana'] }, foto: 'assets/img/carta/filtrado-v60.jpg', estado: 'nuevo', ejemplo: true },
       { id: 'chemex-kit', seccion: 'cafe', nombre: 'Café para filtrado', descripcion: 'Tueste claro pensado para V60 y Chemex. Notas frutales y acidez brillante.', contenido: 'Bolsa de 250 g o 500 g', venta: 'peso', pesos: [250, 500], opciones: { nombre: 'Molienda', valores: ['En grano', 'Filtro (V60 / Chemex)'] }, foto: 'assets/img/lugar/chemex.jpg', ejemplo: true },
 
-      // Proveeduría
-      { id: 'medialunas', seccion: 'proveeduria', nombre: 'Medialunas de manteca', descripcion: 'Laminadas y horneadas en el día.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/medialuna-rellena.jpg', ejemplo: true },
-      { id: 'chipa', seccion: 'proveeduria', nombre: 'Chipá', descripcion: 'Con queso, listo para hornear. Ideal para tener en el freezer.', contenido: 'Por kilo · aprox. 40 unidades', venta: 'peso', pesos: [500, 1000, 2000], foto: 'assets/img/carta/chipa.jpg', ejemplo: true },
-      { id: 'cookies', seccion: 'proveeduria', nombre: 'Cookies de chocolate y sal', descripcion: 'Con chips de chocolate semiamargo y escamas de sal.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/cookie-chocolate-sal.jpg', ejemplo: true },
-      { id: 'danesas', seccion: 'proveeduria', nombre: 'Danesas de hibiscus', descripcion: 'Laminado de manteca con crema de hibiscus y frutillas.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/danesa-hibiscus.jpg', ejemplo: true },
-      { id: 'tarteletas', seccion: 'proveeduria', nombre: 'Tarteletas con merengue', descripcion: 'Masa sablée, crema cítrica y merengue flameado.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/tarteletas.jpg', ejemplo: true },
-      { id: 'budin-limon', seccion: 'proveeduria', nombre: 'Budín de limón', descripcion: 'Con mascarpone de lima, higos y pistachos.', contenido: 'Entero · 8 porciones', venta: 'unidad', foto: 'assets/img/carta/budin-limon-higos.jpg', ejemplo: true },
-      { id: 'budin-banana', seccion: 'proveeduria', nombre: 'Budín de banana', descripcion: 'Con nueces pecan, crema de café y salsa toffee.', contenido: 'Entero · 8 porciones', venta: 'unidad', foto: 'assets/img/carta/budin-banana-pecan.jpg', ejemplo: true },
-      { id: 'scones', seccion: 'proveeduria', nombre: 'Scones de queso', descripcion: 'Para rellenar a gusto o servir tibios con manteca.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/scon-trucha.jpg', ejemplo: true },
-      { id: 'cafe-mayorista', seccion: 'proveeduria', nombre: 'Café en grano para negocios', descripcion: 'Nuestro blend para cafeterías y oficinas. Consultanos por volumen.', contenido: 'Por kilo', venta: 'peso', pesos: [1000, 2000, 5000], foto: 'assets/img/lugar/espresso-metodo.jpg', fotoPosicion: 'center 40%', ejemplo: true }
+      // Proveeduría (fotos y productos reales; descripciones a revisar con el local)
+      { id: 'alfajores', seccion: 'proveeduria', nombre: 'Alfajores sablé', descripcion: 'Masa sablée con frutos secos. De almendras con dulce de leche o de pistacho con chocolate blanco.', contenido: 'Por docena', venta: 'docena', opciones: { nombre: 'Sabor', valores: ['Almendras y dulce de leche', 'Pistacho y chocolate blanco'] }, foto: 'assets/img/tienda/alfajores-almendra-pistacho.jpg' },
+      { id: 'cookies-rellenas', seccion: 'proveeduria', nombre: 'Cookies de chocolate rellenas', descripcion: 'Cookie húmeda de chocolate, rellena de crema de chocolate con leche.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/tienda/cookie-chocolate-rellena.jpg', fotoPosicion: 'center 45%' },
+      { id: 'budin-carrot', seccion: 'proveeduria', nombre: 'Budín carrot cake', descripcion: 'Zanahoria, especias y nueces, con frosting de queso crema, ralladura de naranja y pétalos.', contenido: 'Entero', venta: 'unidad', foto: 'assets/img/tienda/budin-carrot-cake.jpg' },
+      { id: 'budin-banana-choco', seccion: 'proveeduria', nombre: 'Budín de banana', descripcion: 'Con cobertura de ganache de chocolate, coco en láminas y pétalos.', contenido: 'Entero', venta: 'unidad', foto: 'assets/img/tienda/budin-banana-chocolate-coco.jpg', fotoPosicion: 'center 60%' },
+      { id: 'chipa', seccion: 'proveeduria', nombre: 'Chipá', descripcion: 'Con queso. Ideal para tener en el freezer y hornear cuando lo necesites.', contenido: 'Por unidad', venta: 'unidad', opciones: { nombre: 'Presentación', valores: ['Congelado', 'Para hornear'] }, foto: 'assets/img/tienda/chipa.jpg' },
+      { id: 'scones', seccion: 'proveeduria', nombre: 'Scones', descripcion: 'Para servir tibios o rellenar a gusto.', contenido: 'Por unidad', venta: 'unidad', opciones: { nombre: 'Presentación', valores: ['Congelado', 'Para hornear'] }, foto: 'assets/img/carta/scon-trucha.jpg', fotoProvisoria: true }
     ]
   }
 };
