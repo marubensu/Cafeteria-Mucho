@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>El lugar · MUCHO</title>
+  <meta name="description" content="Un café de barrio en Conesa 2686, Coghlan: nuestro café, el equipo, el salón y el deck. Horarios, cómo llegar y servicios: pet-friendly, wifi, sin reservas y take away.">
+  <link rel="icon" type="image/png" href="assets/img/logos/logo-mucho-cafe.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;1,400&family=Yellowtail&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="fondo-scroll" data-fondo="crema">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="header">
+    <div class="contenedor header__barra">
+      <a class="header__logo" href="index.html" aria-label="MUCHO, ir al inicio">
+        <img src="assets/img/logos/logo-mucho-cafe.png" alt="MUCHO" width="68" height="44">
+      </a>
+      <nav class="header__nav" id="nav-principal" aria-label="Principal">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a class="nav-menu" href="menu.html">Menú</a></li>
+          <li><a href="el-lugar.html" aria-current="page">El lugar</a></li>
+          <li><a href="encargos.html">Encargos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+      <div class="header__acciones">
+        <a class="estado" href="el-lugar.html#horarios" data-estado="largo"><span class="estado__texto">Lunes a viernes 8 a 20 h</span></a>
+        <button class="header__toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido" class="contenedor">
+    <section class="nosotros-hero con-fondo" aria-labelledby="lugar-titulo" data-fondo="crema">
+      <svg class="fig-fondo" data-forma="grano" data-color="cream" data-hueco="#f8f4ef" style="width:560px; left:calc((100% - 100vw) / 2 - 96px); bottom:48px;"></svg>
+      <div class="nosotros-hero__texto">
+        <h1 id="lugar-titulo">Resolvemos todo tu día</h1>
+        <p>Cualquiera sea el momento, la ocasión o la restricción de tu mesa, hay algo para vos acá.</p>
+      </div>
+      <video class="nosotros-hero__foto nosotros-hero__video" src="assets/video/mucho-local.mp4" poster="assets/video/mucho-local-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Video: un pedido en MUCHO, de la barra a la vereda"></video>
+    </section>
+
+    <svg class="fig-fondo fig-fondo--cita" data-forma="bucle" data-color="cream" style="width:760px; right:-320px; top:auto; margin-top:40px;"></svg>
+    <p class="cita">Coffee &amp; Kindness: <span class="circulado">atender bien<svg class="circulado__trazo" viewBox="0 0 300 90" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M30 62 C6 44 40 14 150 11 C246 9 298 22 293 45 C288 70 214 82 136 79 C60 76 10 66 9 46 C8 28 52 16 128 13 C176 11 214 14 240 19"/></svg></span> es tan importante como el café.</p>
+
+    <section class="seccion nuestro-cafe" aria-labelledby="cafe-titulo" data-fondo="arena">
+      <div class="nuestro-cafe__texto">
+        <p class="eyebrow">Nuestro café</p>
+        <h2 id="cafe-titulo">Origen y trazabilidad del grano</h2>
+        <p>Trabajamos con cafés de especialidad de origen conocido y rotamos orígenes según la temporada. En la barra te contamos qué tenemos hoy y cómo lo preparamos.</p>
+      </div>
+      <ul class="metodos">
+        <li class="metodo">
+          <img class="foto metodo__foto" src="assets/img/carta/filtrado-v60.jpg" alt="Café filtrándose en un dripper sobre una jarra de vidrio" loading="lazy">
+          <div>
+            <h3>V60</h3>
+            <p>Filtrado para una o dos tazas. Resalta la acidez y las notas frutales del grano.</p>
+          </div>
+        </li>
+        <li class="metodo">
+          <img class="foto metodo__foto" src="assets/img/lugar/chemex.jpg?v=7" alt="Cafetera Chemex con café filtrado y su collar de madera, sobre una mesa con luz de ventana" loading="lazy" style="object-position: center 62%;">
+          <div>
+            <h3>Chemex</h3>
+            <p>Filtro más grueso, taza limpia y liviana. Ideal para compartir en la mesa.</p>
+          </div>
+        </li>
+        <li class="metodo">
+          <img class="foto metodo__foto" src="assets/img/lugar/espresso-metodo.jpg?v=7" alt="Espresso en taza de vidrio con plato, sobre fondo beige" loading="lazy" style="object-position: center 52%;">
+          <div>
+            <h3>Espresso</h3>
+            <p>La base de toda la cafetería con leche: cortado, flat white, capuchino.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+
+
+    <header class="pagina-titulo pagina-titulo--seccion con-fondo" id="espacio" data-fondo="cafe">
+      <svg class="fig-fondo" data-forma="aspas" data-color="honey" data-hueco="#8b7361" style="width:540px; right:calc((100% - 100vw) / 2 - 84px); top:-80px;"></svg>
+      <svg class="fig-fondo" data-forma="circulo" data-color="chestnut" style="width:460px; left:calc((100% - 100vw) / 2 - 120px); top:420px;"></svg>
+      <p class="eyebrow">El espacio</p>
+      <h2>Salón, deck y mostrador</h2>
+      <p class="bajada">Un salón luminoso para quedarte, un deck para los días lindos y un mostrador con todo lo que sale del horno.</p>
+    </header>
+
+    <section class="galeria" aria-label="Fotos del lugar">
+      <figure><img class="foto" src="assets/img/lugar/salon.jpg" alt="El salón de MUCHO: banqueta corrida junto a una pared curva con luz cálida, mesas de madera y la heladera de pastelería al fondo"></figure>
+      <figure><img class="foto" src="assets/img/lugar/deck.jpg" alt="Mesa larga de madera con una planta, lámparas de cerámica y estantes con bolsas de café" style="object-position: center 76%;"></figure>
+      <figure><img class="foto" src="assets/img/lugar/pet-friendly-perro.jpg" alt="Un perro toma de un vaso de MUCHO en el local" style="object-position: center 72%;"></figure>
+    </section>
+
+    <div class="lugar-info con-fondo" data-fondo="crema">
+        <svg class="fig-fondo" data-forma="flor" data-color="sand" data-hueco="#f8f4ef" style="width:520px; right:calc((100% - 100vw) / 2 - 100px); bottom:-200px;"></svg>
+      <section class="panel panel--arena" id="horarios" aria-labelledby="horarios-titulo">
+        <h2 id="horarios-titulo">Horarios</h2>
+        <ul class="lista-horarios" data-horarios></ul>
+        <p class="estado" data-estado="largo"><span class="estado__texto"></span></p>
+      </section>
+
+      <section class="panel" id="servicios" aria-labelledby="servicios-titulo">
+        <h2 id="servicios-titulo">Servicios</h2>
+        <ul class="lista-servicios" data-servicios="detalle"></ul>
+      </section>
+
+      <section class="panel como-llegar" id="como-llegar" aria-labelledby="llegar-titulo">
+        <h2 id="llegar-titulo">Cómo llegar</h2>
+        <div class="como-llegar__mapa">
+          <iframe class="mapa" style="min-height: 0;" title="Mapa: MUCHO en Conesa 2686, Coghlan" src="https://www.google.com/maps?q=Conesa+2686,+Coghlan,+CABA&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <p><strong>Conesa 2686, Coghlan, CABA</strong></p>
+        <p>Tren Mitre, estación Coghlan · Colectivos 41, 44 y 175</p>
+        <a class="enlace-flecha" href="https://www.google.com/maps/search/?api=1&amp;query=Conesa+2686+Coghlan+CABA" target="_blank" rel="noopener">Abrir en Google Maps →</a>
+      </section>
+    </div>
+
+    <section class="cierre-cta" aria-label="Siguiente paso">
+      <h2>¿Ya sabés qué vas a pedir?</h2>
+      <div>
+        <a class="btn btn--primario" href="menu.html">Ver menú</a>
+        <a class="btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=Conesa+2686+Coghlan+CABA" target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="contenedor footer__grilla">
+      <div class="footer__marca">
+        <img src="assets/img/logos/logo-mucho.png" alt="MUCHO" width="99" height="64">
+        <p>Café de especialidad, brunch, pastelería y traguitos. Coffee &amp; Kindness, todo el día.</p>
+      </div>
+      <div>
+        <h2>Dónde</h2>
+        <address>
+          Conesa 2686<br>
+          Coghlan, CABA<br>
+          <a href="el-lugar.html#como-llegar">Cómo llegar</a>
+        </address>
+      </div>
+      <div>
+        <h2>Horarios</h2>
+        <ul class="footer__horarios" data-horarios>
+          <li><span>Lunes a viernes</span><span>8 a 20 h</span></li>
+          <li><span>Sábados y domingos</span><span>9 a 20 h</span></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contacto</h2>
+        <ul>
+          <li><a href="#" data-whatsapp>WhatsApp</a></li>
+          <li><a href="https://www.instagram.com/mucho.arg/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="mailto:hola@muchocafe.com.ar">hola@muchocafe.com.ar</a></li>
+        </ul>
+      </div>
+      <img class="footer__dibujo" src="assets/img/decoracion/dibujo-footer.png" alt="" width="557" height="571" loading="lazy">
+    </div>
+    <div class="contenedor footer__legal">
+      <p>© <span data-anio>2026</span> MUCHO · Coffee &amp; Kindness</p>
+      <p>La carta y los precios pueden variar sin previo aviso. <a href="menu.html#avisos">Aviso sobre gluten y alérgenos</a></p>
+    </div>
+  </footer>
+
+  <a class="wa-flotante" href="#" data-whatsapp aria-label="Escribinos por WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
+    WhatsApp
+  </a>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

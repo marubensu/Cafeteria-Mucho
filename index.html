@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MUCHO · Café de especialidad en Coghlan</title>
+  <meta name="description" content="Café de especialidad, brunch, pastelería y traguitos todo el día en Conesa 2686, Coghlan. Mirá la carta con precios, filtrá por dieta y consultá horarios.">
+  <link rel="icon" type="image/png" href="assets/img/logos/logo-mucho-cafe.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;1,400&family=Yellowtail&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="home fondo-scroll" data-fondo="crema">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="header">
+    <div class="contenedor header__barra">
+      <a class="header__logo" href="index.html" aria-label="MUCHO, ir al inicio">
+        <img src="assets/img/logos/logo-mucho-cafe.png" alt="MUCHO" width="68" height="44">
+      </a>
+      <nav class="header__nav" id="nav-principal" aria-label="Principal">
+        <ul>
+          <li><a href="index.html" aria-current="page">Inicio</a></li>
+          <li><a class="nav-menu" href="menu.html">Menú</a></li>
+          <li><a href="el-lugar.html">El lugar</a></li>
+          <li><a href="encargos.html">Encargos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+      <div class="header__acciones">
+        <a class="estado" href="el-lugar.html#horarios" data-estado="largo"><span class="estado__texto">Lunes a viernes 8 a 20 h</span></a>
+        <button class="header__toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <!-- Hero: qué es y por qué me interesa -->
+    <section class="hero contenedor" aria-labelledby="hero-titulo" data-fondo="crema">
+      <div class="hero__grilla">
+        <div class="hero__texto">
+          <h1 id="hero-titulo"><span class="titulo-desktop">Café de especialidad, brunch, pastelería y traguitos.</span><span class="titulo-mobile">Café, pastelería y traguitos.</span> <span class="hero__lema">Todo el día, en Coghlan.</span></h1>
+          <p class="hero__bajada">Un filtrado a las 9, el ejecutivo a las 13, una torta a las 17 y un vermú a las 19. Sin reservas: llegás y te sentás.</p>
+          <div class="hero__acciones">
+            <a class="btn btn--primario" href="menu.html">Ver menú</a>
+            <a class="btn" href="el-lugar.html#como-llegar">Cómo llegar</a>
+          </div>
+        </div>
+        <div class="hero__imagen">
+          <img class="hero__granos hero__granos--1" src="assets/img/decoracion/granos-cafe.png" alt="" aria-hidden="true">
+          <img class="hero__granos hero__granos--2" src="assets/img/decoracion/granos-cafe.png" alt="" aria-hidden="true">
+          <img class="hero__vaso" src="assets/img/decoracion/vaso-mucho-recorte.png?v=9" alt="Dos manos sostienen un vaso de café para llevar con el logo de MUCHO" width="613" height="790">
+        </div>
+      </div>
+    </section>
+
+    <!-- Momentos del día: la amplitud visible en el primer scroll -->
+    <nav class="momentos contenedor" aria-label="Qué hay en cada momento del día" data-fondo="crema">
+      <ul>
+        <li>
+          <a class="momento" href="menu.html?momento=desayuno">
+            <span class="momento__hora">Desde las 8 h</span>
+            <h3>Desayuno</h3>
+            <p>Filtrados, medialunas y tostadas de masa madre.</p>
+          </a>
+        </li>
+        <li>
+          <a class="momento" href="el-lugar.html#servicios">
+            <span class="momento__hora">Toda la jornada</span>
+            <h3>Trabajo</h3>
+            <p>Wifi, enchufes y mesas donde quedarte.</p>
+          </a>
+        </li>
+        <li>
+          <a class="momento" href="menu.html?momento=mediodia">
+            <span class="momento__hora">12 a 15 h</span>
+            <h3>Ejecutivo</h3>
+            <p>Plato del día, con bebida y café.</p>
+          </a>
+        </li>
+        <li>
+          <a class="momento" href="menu.html?momento=merienda">
+            <span class="momento__hora">Desde las 16 h</span>
+            <h3>Merienda</h3>
+            <p>Tortas, laminados y matcha ceremonial.</p>
+          </a>
+        </li>
+        <li>
+          <a class="momento" href="menu.html?momento=after">
+            <span class="momento__hora">Desde las 18 h</span>
+            <h3>After</h3>
+            <p>Vermú, spritz y algo para picar.</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Qué puedo comer -->
+    <section class="seccion seccion--bloque contenedor con-fondo" aria-labelledby="destacados-titulo" data-fondo="cafe">
+      <svg class="fig-fondo" data-forma="aspas" data-color="honey" data-hueco="cafe" style="width:520px; right:calc((100% - 100vw) / 2 - 80px); top:-20px;"></svg>
+      <svg class="fig-fondo" data-forma="grano" data-color="chestnut" data-hueco="#8b7361" style="width:380px; left:calc((100% - 100vw) / 2 - 92px); bottom:-90px;"></svg>
+      <div class="seccion__cabecera">
+        <div>
+          <p class="eyebrow">De la carta</p>
+          <h2 id="destacados-titulo">Lo que más se pide</h2>
+        </div>
+        <a class="btn btn--primario" href="menu.html">Ver la carta completa</a>
+      </div>
+      <div class="grilla-destacados" data-destacados></div>
+    </section>
+
+    <!-- Video: la cocina -->
+    <section class="seccion seccion--bloque contenedor video-cocina" aria-labelledby="cocina-titulo" data-fondo="cafe">
+      <div class="video-cocina__texto">
+        <p class="eyebrow">Nuestra cocina</p>
+        <h2 id="cocina-titulo">Cocinamos con tiempo y presencia</h2>
+      </div>
+      <video class="video-cocina__video" src="assets/video/mucho-cocina.mp4" poster="assets/video/mucho-cocina-poster.jpg" autoplay muted loop playsinline preload="metadata"
+        aria-label="Video: preparación de platos en la cocina de MUCHO"></video>
+    </section>
+
+    <section class="seccion seccion--bloque contenedor" aria-labelledby="dietas-titulo" data-fondo="crema">
+      <div class="franja-dietas">
+        <div>
+          <h2 id="dietas-titulo">¿Vegano o sin gluten? Mirá solo lo que podés comer.</h2>
+          <p>Filtrá la carta por dieta y ves cada plato con foto y precio. Tenemos pan sin gluten, pero no somos una cocina libre de contaminación cruzada: avisanos con tiempo.</p>
+        </div>
+        <div class="franja-dietas__acciones">
+          <a class="btn btn--claro" href="menu.html?dieta=vegano">Ver opciones veganas</a>
+          <a class="btn btn--claro" href="menu.html?dieta=sin-gluten">Ver sin gluten</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dónde y cuándo -->
+    <section class="seccion seccion--bloque contenedor con-fondo" aria-labelledby="donde-titulo" data-fondo="crema">
+      <svg class="fig-fondo" data-forma="arcos" data-color="sand" style="width:620px; right:calc((100% - 100vw) / 2 - 72px); top:-60px;"></svg>
+      <svg class="fig-fondo" data-forma="circulo" data-color="cream" style="width:420px; left:calc((100% - 100vw) / 2 - 104px); bottom:-40px;"></svg>
+      <div class="seccion__cabecera">
+        <div>
+          <p class="eyebrow">Dónde y cuándo</p>
+          <h2 id="donde-titulo">Te esperamos en Coghlan</h2>
+        </div>
+      </div>
+      <div class="donde">
+        <div class="donde__mapa">
+          <iframe class="mapa" title="Mapa: MUCHO en Conesa 2686, Coghlan" src="https://www.google.com/maps?q=Conesa+2686,+Coghlan,+CABA&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="donde__info panel">
+          <div>
+            <h3>Dirección</h3>
+            <p class="donde__direccion">Conesa 2686<span>Coghlan, CABA · Tren Mitre (Coghlan) · Colectivos 41, 44 y 175</span></p>
+          </div>
+          <div>
+            <h3>Horarios</h3>
+            <ul class="lista-horarios" data-horarios></ul>
+          </div>
+          <div class="donde__servicios">
+            <div>
+              <h3>Servicios</h3>
+              <ul class="lista-tags" data-servicios></ul>
+              <p class="donde__pet">Tu perro entra con vos, en el salón y en el deck.</p>
+            </div>
+            <img src="assets/img/decoracion/pet-friendly-ilustracion.png" alt="Ilustración de un perro junto al logo de MUCHO: el local es pet-friendly" width="200" height="272" loading="lazy">
+          </div>
+          <a class="enlace-flecha" href="https://www.google.com/maps/search/?api=1&amp;query=Conesa+2686+Coghlan+CABA" target="_blank" rel="noopener">Abrir en Google Maps →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="contenedor footer__grilla">
+      <div class="footer__marca">
+        <img src="assets/img/logos/logo-mucho.png" alt="MUCHO" width="99" height="64">
+        <p>Café de especialidad, brunch, pastelería y traguitos. Coffee &amp; Kindness, todo el día.</p>
+      </div>
+      <div>
+        <h2>Dónde</h2>
+        <address>
+          Conesa 2686<br>
+          Coghlan, CABA<br>
+          <a href="el-lugar.html#como-llegar">Cómo llegar</a>
+        </address>
+      </div>
+      <div>
+        <h2>Horarios</h2>
+        <ul class="footer__horarios" data-horarios>
+          <li><span>Lunes a viernes</span><span>8 a 20 h</span></li>
+          <li><span>Sábados y domingos</span><span>9 a 20 h</span></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Contacto</h2>
+        <ul>
+          <li><a href="#" data-whatsapp>WhatsApp</a></li>
+          <li><a href="https://www.instagram.com/mucho.arg/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="mailto:hola@muchocafe.com.ar">hola@muchocafe.com.ar</a></li>
+        </ul>
+      </div>
+      <img class="footer__dibujo" src="assets/img/decoracion/dibujo-footer.png" alt="" width="557" height="571" loading="lazy">
+    </div>
+    <div class="contenedor footer__legal">
+      <p>© <span data-anio>2026</span> MUCHO · Coffee &amp; Kindness</p>
+      <p>La carta y los precios pueden variar sin previo aviso. <a href="menu.html#avisos">Aviso sobre gluten y alérgenos</a></p>
+    </div>
+  </footer>
+
+  <a class="wa-flotante" href="#" data-whatsapp aria-label="Escribinos por WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
+    WhatsApp
+  </a>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
