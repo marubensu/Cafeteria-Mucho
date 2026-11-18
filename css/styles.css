@@ -875,6 +875,204 @@ body.pagina-encargos::before {
 @media (hover: none) { .canal:hover { transform: none; box-shadow: none; } }
 .contacto-extra { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 24px; }
 
+/* ---------- 13b. Tienda y "Tu pedido" (carrito sin precios) ---------- */
+
+/* Botón de la bolsa en el header */
+.header__pedido {
+  position: relative; display: grid; place-content: center; flex: none;
+  width: 44px; height: 44px; padding: 0;
+  border: 1.5px solid var(--linea); border-radius: 50%; background: var(--blanco); color: var(--tinta);
+  cursor: pointer; transition: border-color var(--transicion), background var(--transicion);
+}
+.header__pedido:hover { border-color: var(--tinta); }
+.header__pedido svg { width: 22px; height: 22px; }
+.header__pedido-cuenta {
+  position: absolute; top: -5px; right: -5px;
+  min-width: 20px; height: 20px; padding: 0 5px;
+  display: none; place-content: center;
+  border-radius: 999px; background: var(--tinta); color: var(--blanco);
+  font-family: var(--fuente-titulos); font-size: 12px; font-weight: 600; line-height: 20px; text-align: center;
+}
+.header__pedido.tiene .header__pedido-cuenta { display: block; }
+.header__pedido.rebote { animation: rebote 420ms ease-out; }
+@keyframes rebote { 0% { transform: scale(1); } 35% { transform: scale(1.14); } 100% { transform: scale(1); } }
+
+/* Contador – n + */
+.contador {
+  display: inline-flex; align-items: center;
+  border: 1.5px solid var(--tinta); border-radius: var(--radio-boton); background: var(--blanco);
+}
+.contador button {
+  display: grid; place-content: center;
+  width: 38px; height: 38px; padding: 0; border: 0; border-radius: 50%;
+  background: none; cursor: pointer; font-size: 20px; line-height: 1;
+}
+.contador button:hover { background: var(--arena); }
+.contador button svg { width: 18px; height: 18px; }
+.contador output {
+  min-width: 24px; text-align: center;
+  font-family: var(--fuente-titulos); font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+
+/* Opciones tipo píldora (radio) */
+.opcion-pill { position: relative; display: inline-flex; cursor: pointer; }
+.opcion-pill input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opcion-pill span {
+  padding: 8px 16px; border: 1.5px solid var(--linea); border-radius: var(--radio-boton); background: var(--blanco);
+  font-family: var(--fuente-titulos); font-size: 16px; font-weight: 500; line-height: 1.3;
+  transition: background var(--transicion), border-color var(--transicion), color var(--transicion);
+}
+.opcion-pill:hover span { border-color: var(--tinta); }
+.opcion-pill input:checked + span { background: var(--tinta); border-color: var(--tinta); color: var(--blanco); }
+.opcion-pill input:focus-visible + span { outline: 2px solid var(--cafe); outline-offset: 2px; }
+
+/* Página Tienda */
+.tienda-titulo .pasos { list-style: none; padding: 0; }
+.tienda-tabs {
+  display: inline-flex; gap: 4px; padding: 5px; margin-bottom: 28px;
+  border: 1.5px solid var(--linea); border-radius: var(--radio-boton); background: var(--blanco);
+}
+.tienda-tabs [role="tab"] {
+  padding: 10px 24px; border: 0; border-radius: var(--radio-boton); background: none; cursor: pointer;
+  font-family: var(--fuente-titulos); font-size: 17px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--tinta-suave); transition: background var(--transicion), color var(--transicion);
+}
+.tienda-tabs [role="tab"]:hover { color: var(--tinta); }
+.tienda-tabs [aria-selected="true"] { background: var(--tinta); color: var(--blanco); }
+.tienda-tabs [aria-selected="true"]:hover { color: var(--blanco); }
+.tienda-panel:focus { outline: none; }
+.tienda-panel__bajada { margin-bottom: 24px; font-size: 18px; color: var(--tinta-suave); }
+.tienda-nota { margin-top: 48px; max-width: 760px; font-size: 17px; color: var(--tinta-suave); }
+.tienda-nota a { color: var(--tinta); font-family: var(--fuente-titulos); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--cafe); }
+
+.producto-card__contenido {
+  font-family: var(--fuente-titulos); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--cafe);
+}
+.producto-card__ejemplo {
+  align-self: flex-start; padding: 2px 8px; border: 1px dashed var(--cafe-claro); border-radius: 6px;
+  font-family: var(--fuente-titulos); font-size: 12px; letter-spacing: 0.04em; color: var(--cafe-oscuro);
+}
+.producto-card__precio { font-family: var(--fuente-titulos); font-size: 15px; color: var(--tinta-suave); }
+.producto-card__precio.precio { font-size: 21px; color: var(--tinta); }
+.producto-card .plato-card__pie { align-items: center; }
+/* Los botones de la tarjeta quedan por encima del enlace que cubre la card */
+.producto-card__accion { position: relative; z-index: 1; flex: none; }
+.producto-card .plato-card__cuerpo { gap: 6px; }
+
+/* Ficha de producto (reutiliza .ficha) */
+.ficha-producto .ficha__info { gap: 14px; }
+.ficha-producto .ficha__nombre { margin-top: 0; }
+.ficha-producto__precio { font-family: var(--fuente-titulos); font-size: 16px; color: var(--tinta-suave); }
+.ficha-producto__grupo { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; padding: 0; border: 0; min-width: 0; }
+.ficha-producto__grupo legend, .ficha-producto__etiqueta {
+  width: 100%; margin-bottom: 8px; padding: 0;
+  font-family: var(--fuente-titulos); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cafe);
+}
+.ficha-producto__comprar { display: grid; gap: 14px; margin-top: auto; padding-top: 18px; border-top: 1px solid var(--linea); }
+.ficha-producto__cantidad { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ficha-producto__etiqueta { width: auto; margin: 0; }
+
+/* Panel "Tu pedido": cajón lateral en desktop, hoja desde abajo en mobile */
+.pedido {
+  width: min(460px, 100vw); max-width: 100vw; height: 100dvh; max-height: 100dvh;
+  margin: 0 0 0 auto; padding: 0; border: 0; border-left: 1.5px solid var(--tinta);
+  background: var(--blanco); color: var(--tinta); box-shadow: var(--sombra);
+  overflow-y: auto; overscroll-behavior: contain;
+}
+.pedido[open] { display: flex; flex-direction: column; animation: deslizar 240ms ease-out; }
+.pedido::backdrop { background: rgba(47, 38, 33, 0.55); backdrop-filter: blur(3px); }
+@keyframes deslizar { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+html.pedido-abierto { overflow: hidden; }
+.pedido__cabecera {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; gap: 12px;
+  padding: 20px 24px; background: var(--blanco); border-bottom: 1px solid var(--linea);
+}
+.pedido__cabecera h2 { flex: 1; font-size: 30px; text-transform: uppercase; }
+.pedido__cerrar { position: static; }
+.pedido__volver {
+  display: grid; place-content: center; width: 44px; height: 44px; padding: 0;
+  border: 1.5px solid var(--linea); border-radius: 50%; background: var(--blanco); cursor: pointer; font-size: 20px;
+}
+.pedido__volver[hidden] { display: none; }
+.pedido__paso { display: flex; flex-direction: column; flex: 1; padding: 20px 24px 28px; }
+.pedido__paso[hidden] { display: none; }
+
+.pedido__vacio { display: grid; gap: 12px; justify-items: start; padding: 24px 0; color: var(--tinta-suave); }
+.pedido__vacio[hidden] { display: none; }
+.pedido__vacio-titulo { font-family: var(--fuente-titulos); font-size: 24px; font-weight: 600; color: var(--tinta); }
+.pedido__vacio .btn { margin-top: 8px; }
+
+.pedido__lineas { display: grid; gap: 12px; }
+.pedido-linea {
+  display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: center;
+  padding-bottom: 12px; border-bottom: 1px solid var(--linea);
+}
+.pedido-linea__foto { width: 76px; height: 76px; border-radius: 10px; overflow: hidden; background: var(--arena); }
+.pedido-linea__foto .foto--vacia { padding: 6px; font-size: 9px; }
+.pedido-linea__info { display: grid; gap: 2px; min-width: 0; }
+.pedido-linea__nombre { font-family: var(--fuente-titulos); font-size: 19px; font-weight: 600; line-height: 1.15; }
+.pedido-linea__variante { font-size: 15px; color: var(--tinta-suave); }
+.pedido-linea__pie { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.pedido-linea__pie .contador button { width: 34px; height: 34px; }
+.pedido-linea__unidad { font-family: var(--fuente-titulos); font-size: 15px; color: var(--tinta-suave); }
+
+.pedido__pie { display: grid; gap: 14px; margin-top: auto; padding-top: 24px; }
+.pedido__pie[hidden] { display: none; }
+.pedido__nota { padding: 12px 14px; border-radius: 10px; background: var(--arena); font-size: 15px; line-height: 1.45; }
+.pedido__seguir {
+  justify-self: center; align-self: center; padding: 6px 0; border: 0; background: none; cursor: pointer;
+  font-family: var(--fuente-titulos); font-size: 15px; font-weight: 600; color: var(--tinta);
+  text-decoration: none; border-bottom: 1px solid var(--cafe);
+}
+
+.pedido__resumen { margin-bottom: 20px; padding: 14px 16px; border-radius: 10px; background: var(--arena); }
+.pedido__resumen-titulo {
+  display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;
+  font-family: var(--fuente-titulos); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cafe-oscuro);
+}
+.pedido__editar { padding: 0; border: 0; background: none; cursor: pointer; font: inherit; letter-spacing: 0.08em; color: var(--tinta); border-bottom: 1px solid var(--cafe); }
+.pedido__resumen li { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; line-height: 1.5; }
+.pedido__resumen li span { color: var(--tinta-suave); text-align: right; }
+.pedido__elegir { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; padding: 0; border: 0; min-width: 0; }
+.pedido__elegir legend { width: 100%; margin-bottom: 6px; padding: 0; font-family: var(--fuente-titulos); font-size: 17px; font-weight: 500; }
+.campo[hidden] { display: none; }
+.campo__opcional { font-weight: 400; color: var(--tinta-suave); }
+.pedido__enviar { margin-top: 8px; }
+.pedido__enviar svg { width: 20px; height: 20px; }
+
+.pedido__listo { align-items: center; justify-content: center; gap: 14px; text-align: center; }
+.pedido__listo .pedido__listo-icono {
+  display: grid; place-content: center; width: 64px; height: 64px; border-radius: 50%;
+  background: var(--abierto); color: var(--blanco); font-size: 30px;
+}
+.pedido__listo h3 { font-size: 28px; }
+.pedido__listo p { color: var(--tinta-suave); max-width: 340px; }
+.pedido__listo p a { color: var(--tinta); }
+
+/* Aviso "agregado a tu pedido" */
+.pedido-aviso {
+  position: fixed; left: 50%; bottom: 28px; z-index: 60;
+  display: flex; align-items: center; gap: 16px;
+  max-width: calc(100vw - 32px); padding: 12px 12px 12px 20px;
+  border-radius: var(--radio-boton); background: var(--tinta); color: var(--blanco); box-shadow: var(--sombra);
+  font-size: 16px;
+  transform: translate(-50%, 24px); opacity: 0; pointer-events: none;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+.pedido-aviso.visible { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+.pedido-aviso__texto { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pedido-aviso__ver {
+  flex: none; padding: 8px 16px; border: 1.5px solid var(--blanco); border-radius: var(--radio-boton);
+  background: none; color: var(--blanco); cursor: pointer;
+  font-family: var(--fuente-titulos); font-size: 14px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.pedido-aviso__ver:hover { background: var(--blanco); color: var(--tinta); }
+
+/* Barra "Ver tu pedido": solo en mobile, en la tienda, cuando hay productos */
+.pedido-barra { display: none; }
+
 /* ---------- 14. Impresión: menú en PDF (misma fuente de datos) ---------- */
 /* ==========================================================================
    15. Responsive: tablet y mobile
@@ -1159,6 +1357,62 @@ body.pagina-encargos::before {
   /* Fondos */
   .fig-fondo { max-width: 72vw; }
   .hero__granos--1 { width: 70%; }
+}
+
+/* ---------- Tienda y pedido: tablet y mobile ---------- */
+@media (max-width: 960px) {
+  .grilla-productos { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .tienda-tabs { display: flex; width: 100%; }
+  .tienda-tabs [role="tab"] { flex: 1; padding: 10px 8px; font-size: 15px; }
+  .grilla-productos { grid-template-columns: 1fr; }
+  .producto-card .plato-card__foto { width: 112px; }
+  .producto-card .plato-card__desc { -webkit-line-clamp: 2; font-size: 14px; }
+  .producto-card__contenido { font-size: 11px; }
+  .producto-card .plato-card__pie { flex-wrap: nowrap; }
+  .producto-card .contador button { width: 34px; height: 34px; }
+  .producto-card .btn--chico { min-height: 36px; padding: 0 14px; }
+  .tienda-titulo .pasos::before { left: 23px; }
+
+  .pedido {
+    width: 100%; height: auto; max-height: 92dvh;
+    margin: auto 0 0; border-left: 0; border-top: 1.5px solid var(--tinta);
+    border-radius: 18px 18px 0 0;
+  }
+  .pedido[open] { animation: subir 260ms ease-out; }
+  .pedido__cabecera { padding: 14px 20px; }
+  .pedido__cabecera h2 { font-size: 26px; }
+  .pedido__paso { padding: 16px 20px 24px; }
+
+  .ficha-producto__comprar { position: sticky; bottom: 0; margin: 0 -20px -28px; padding: 14px 20px 20px; background: var(--blanco); }
+
+  .pedido-aviso { bottom: 16px; font-size: 15px; }
+  body.pagina-tienda.con-pedido .pedido-aviso { bottom: 84px; }
+
+  /* En la tienda, con productos en el pedido, la barra reemplaza al botón flotante de WhatsApp */
+  body.pagina-tienda.con-pedido .pedido-barra {
+    position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 45;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 56px; padding: 0 22px;
+    border: 0; border-radius: var(--radio-boton); background: var(--tinta); color: var(--blanco); box-shadow: var(--sombra);
+    font-family: var(--fuente-titulos); font-size: 16px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer;
+  }
+  .pedido-barra__cuenta { font-weight: 500; letter-spacing: 0.02em; text-transform: none; opacity: 0.8; }
+  body.pagina-tienda.con-pedido .wa-flotante { display: none; }
+  body.pagina-tienda.con-pedido .footer { padding-bottom: 88px; }
+}
+/* Desktop chico (961–1180 px): con 6 secciones en el menú, se compacta y el estado muestra solo "Abierto" */
+@media (min-width: 961px) and (max-width: 1180px) {
+  .header__barra { column-gap: 20px; }
+  .header__nav ul { gap: 22px; }
+  .header__nav a { font-size: 16px; letter-spacing: 0.06em; }
+  .estado__extra { display: none; }
+}
+/* Pantallas muy angostas: el estado del local muestra solo "Abierto" o "Cerrado" */
+@media (max-width: 374px) {
+  .estado__extra { display: none; }
+  .header__acciones { gap: 8px; }
 }
 
 @keyframes subir { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }

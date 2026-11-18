@@ -140,6 +140,42 @@ const MUCHO = {
       { id: 'pistacho-frutos-rojos', nombre: 'Pistacho, frutos rojos y ganache de chocolate blanco', descripcion: 'Bizcocho de pistacho, frutos rojos y ganache de chocolate blanco, con cerezas. 12 porciones.', precio: 58000, dietas: [], foto: 'assets/img/carta/torta-pistacho-frutos-rojos.jpg' },
     ]
   }
+  ,
+
+  /* ---------- Tienda: café para casa y proveeduría ----------
+     Sin precios: el carrito arma un pedido y se manda por WhatsApp para cotizar.
+     Cada producto puede tener:
+       venta: 'unidad' | 'docena' | 'peso'   → cómo se elige la cantidad
+       pesos: [250, 500, 1000]                → solo para venta 'peso' (en gramos)
+       opciones: { nombre, valores }          → una elección extra (por ej. la molienda)
+       contenido: texto corto con peso o porciones que trae
+       precio: número (opcional). Si no está, se muestra "Precio a consultar".
+       ejemplo: true                          → producto de prueba [reemplazar por los reales]
+  ------------------------------------------------------------ */
+  tienda: {
+    whatsapp: '5491176167815', // [a validar] ¿la proveeduría usa otro número?
+    secciones: [
+      { id: 'cafe', nombre: 'Café para casa', bajada: 'Nuestro café, en grano o molido para tu método.' },
+      { id: 'proveeduria', nombre: 'Proveeduría', bajada: 'Por docena, por kilo o por unidad. Mayorista y minorista.' }
+    ],
+    productos: [
+      // Café para casa
+      { id: 'blend-casa', seccion: 'cafe', nombre: 'Blend de la casa', descripcion: 'El café que servimos en la barra. Chocolate, caramelo y final dulce.', contenido: 'Bolsa de 250 g, 500 g o 1 kg', venta: 'peso', pesos: [250, 500, 1000], opciones: { nombre: 'Molienda', valores: ['En grano', 'Espresso', 'Filtro (V60 / Chemex)', 'Prensa francesa', 'Moka / italiana'] }, foto: 'assets/img/lugar/espresso-metodo.jpg', ejemplo: true },
+      { id: 'origen-del-mes', seccion: 'cafe', nombre: 'Origen del mes', descripcion: 'Un café de origen único que rotamos según la temporada. Preguntanos cuál tenemos hoy.', contenido: 'Bolsa de 250 g', venta: 'peso', pesos: [250], opciones: { nombre: 'Molienda', valores: ['En grano', 'Espresso', 'Filtro (V60 / Chemex)', 'Prensa francesa', 'Moka / italiana'] }, foto: 'assets/img/carta/filtrado-v60.jpg', estado: 'nuevo', ejemplo: true },
+      { id: 'chemex-kit', seccion: 'cafe', nombre: 'Café para filtrado', descripcion: 'Tueste claro pensado para V60 y Chemex. Notas frutales y acidez brillante.', contenido: 'Bolsa de 250 g o 500 g', venta: 'peso', pesos: [250, 500], opciones: { nombre: 'Molienda', valores: ['En grano', 'Filtro (V60 / Chemex)'] }, foto: 'assets/img/lugar/chemex.jpg', ejemplo: true },
+
+      // Proveeduría
+      { id: 'medialunas', seccion: 'proveeduria', nombre: 'Medialunas de manteca', descripcion: 'Laminadas y horneadas en el día.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/medialuna-rellena.jpg', ejemplo: true },
+      { id: 'chipa', seccion: 'proveeduria', nombre: 'Chipá', descripcion: 'Con queso, listo para hornear. Ideal para tener en el freezer.', contenido: 'Por kilo · aprox. 40 unidades', venta: 'peso', pesos: [500, 1000, 2000], foto: 'assets/img/carta/chipa.jpg', ejemplo: true },
+      { id: 'cookies', seccion: 'proveeduria', nombre: 'Cookies de chocolate y sal', descripcion: 'Con chips de chocolate semiamargo y escamas de sal.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/cookie-chocolate-sal.jpg', ejemplo: true },
+      { id: 'danesas', seccion: 'proveeduria', nombre: 'Danesas de hibiscus', descripcion: 'Laminado de manteca con crema de hibiscus y frutillas.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/danesa-hibiscus.jpg', ejemplo: true },
+      { id: 'tarteletas', seccion: 'proveeduria', nombre: 'Tarteletas con merengue', descripcion: 'Masa sablée, crema cítrica y merengue flameado.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/tarteletas.jpg', ejemplo: true },
+      { id: 'budin-limon', seccion: 'proveeduria', nombre: 'Budín de limón', descripcion: 'Con mascarpone de lima, higos y pistachos.', contenido: 'Entero · 8 porciones', venta: 'unidad', foto: 'assets/img/carta/budin-limon-higos.jpg', ejemplo: true },
+      { id: 'budin-banana', seccion: 'proveeduria', nombre: 'Budín de banana', descripcion: 'Con nueces pecan, crema de café y salsa toffee.', contenido: 'Entero · 8 porciones', venta: 'unidad', foto: 'assets/img/carta/budin-banana-pecan.jpg', ejemplo: true },
+      { id: 'scones', seccion: 'proveeduria', nombre: 'Scones de queso', descripcion: 'Para rellenar a gusto o servir tibios con manteca.', contenido: 'Por docena', venta: 'docena', foto: 'assets/img/carta/scon-trucha.jpg', ejemplo: true },
+      { id: 'cafe-mayorista', seccion: 'proveeduria', nombre: 'Café en grano para negocios', descripcion: 'Nuestro blend para cafeterías y oficinas. Consultanos por volumen.', contenido: 'Por kilo', venta: 'peso', pesos: [1000, 2000, 5000], foto: 'assets/img/lugar/espresso-metodo.jpg', fotoPosicion: 'center 40%', ejemplo: true }
+    ]
+  }
 };
 
 /* ---------- Utilidades compartidas ---------- */

@@ -41,8 +41,14 @@
     document.querySelectorAll('[data-estado]').forEach((el) => {
       el.classList.toggle('estado--abierto', estado.abierto);
       el.classList.toggle('estado--cerrado', !estado.abierto);
-      el.querySelector('.estado__texto').textContent =
-        el.dataset.estado === 'corto' ? estado.corto : estado.largo;
+      const $texto = el.querySelector('.estado__texto');
+      if (el.dataset.estado === 'corto') { $texto.textContent = estado.corto; return; }
+      // "Abierto" + " · hasta las 20 h": la segunda parte se oculta en pantallas muy angostas
+      $texto.textContent = estado.corto;
+      const extra = document.createElement('span');
+      extra.className = 'estado__extra';
+      extra.textContent = estado.largo.slice(estado.corto.length);
+      $texto.appendChild(extra);
     });
   }
 
