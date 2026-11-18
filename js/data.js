@@ -156,7 +156,8 @@ const MUCHO = {
     whatsapp: '5491176167815', // [a validar] ¿la proveeduría usa otro número?
     secciones: [
       { id: 'cafe', nombre: 'Café para casa', bajada: 'Nuestro café, en grano o molido para tu método.' },
-      { id: 'proveeduria', nombre: 'Proveeduría', bajada: 'Por docena o por unidad. Mayorista y minorista.' }
+      { id: 'proveeduria', nombre: 'Proveeduría', bajada: '' },
+      { id: 'tortas', nombre: 'Tortas por encargo', nombreCorto: 'Tortas', bajada: 'Tortas enteras con al menos 48 h de anticipación. Se retiran en el local.' }
     ],
     productos: [
       // Café para casa
@@ -174,6 +175,18 @@ const MUCHO = {
     ]
   }
 };
+
+/* Las tortas por encargo también se piden desde la Tienda (mismos datos que la página Encargos) */
+MUCHO.tienda.productos.push(...MUCHO.encargos.tortas.map((t) => {
+  const porciones = t.descripcion.match(/(\d+(?: a \d+)?) porciones/);
+  return {
+    id: `torta-${t.id}`, seccion: 'tortas', nombre: t.nombre, descripcion: t.descripcion,
+    contenido: porciones ? `Entera · ${porciones[1]} porciones` : 'Entera',
+    venta: 'unidad', precio: t.precio, dietas: t.dietas,
+    foto: t.foto, fotoPosicion: t.fotoPosicion, fotoZoom: t.fotoZoom,
+    anticipacionHoras: MUCHO.encargos.anticipacionHoras
+  };
+}));
 
 /* ---------- Utilidades compartidas ---------- */
 

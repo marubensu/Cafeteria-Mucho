@@ -160,14 +160,16 @@
         <label class="opcion-pill"><input type="radio" name="entrega" value="retiro" checked><span>Retiro en el local</span></label>
         <label class="opcion-pill"><input type="radio" name="entrega" value="envio"><span>Envío</span></label>
       </fieldset>
+      <p class="pedido__aviso-tortas" data-aviso-tortas hidden>Las tortas por encargo se retiran en el local.</p>
       <div class="campo" data-si="entrega=envio" hidden>
         <label for="pedido-direccion">Dirección de entrega</label>
         <input id="pedido-direccion" name="direccion" type="text" autocomplete="street-address" placeholder="Calle, número y barrio">
         <small>Te confirmamos si llegamos a tu zona y el costo del envío.</small>
       </div>
       <div class="campo">
-        <label for="pedido-fecha">Fecha preferida <span class="campo__opcional">(opcional)</span></label>
+        <label for="pedido-fecha"><span data-fecha-titulo>Fecha preferida</span> <span class="campo__opcional" data-fecha-opcional>(opcional)</span></label>
         <input id="pedido-fecha" name="fecha" type="date">
+        <small data-fecha-nota hidden></small>
       </div>
       <div class="campo">
         <label for="pedido-comentarios">Comentarios <span class="campo__opcional">(opcional)</span></label>
@@ -195,15 +197,28 @@
   const $volver = $panel.querySelector('.pedido__volver');
   const $titulo = $panel.querySelector('#pedido-titulo');
 
-  // Fecha mínima: mañana
-  const manana = new Date(Date.now() + 24 * 60 * 60 * 1000);
-  $form.fecha.min = `${manana.getFullYear()}-${String(manana.getMonth() + 1).padStart(2, '0')}-${String(manana.getDate()).padStart(2, '0')}`;
+  // Fecha: mañana como mínimo; si hay tortas por encargo, es obligatoria y respeta su anticipación
+  const aISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const horasAnticipacion = () => Math.max(0, ...lineas.map((l) => productos[l.id].anticipacionHoras || 0));
+  function prepararFecha() {
+    const horas = horasAnticipacion();
+    const conTortas = horas > 0;
+    $form.fecha.min = aISO(new Date(Date.now() + Math.max(24, horas) * 60 * 60 * 1000));
+    $form.fecha.required = conTortas;
+    if ($form.fecha.value && $form.fecha.value < $form.fecha.min) $form.fecha.value = '';
+    $panel.querySelector('[data-fecha-titulo]').textContent = conTortas ? 'Fecha de retiro' : 'Fecha preferida';
+    $panel.querySelector('[data-fecha-opcional]').hidden = conTortas;
+    const $nota = $panel.querySelector('[data-fecha-nota]');
+    $nota.hidden = !conTortas;
+    $nota.textContent = conTortas ? `Las tortas por encargo necesitan al menos ${horas} h de anticipación.` : '';
+    $panel.querySelector('[data-aviso-tortas]').hidden = !conTortas;
+  }
 
   function irAPaso(paso) {
     $panel.querySelectorAll('[data-paso]').forEach((el) => { el.hidden = el.dataset.paso !== paso; });
     $volver.hidden = paso !== 'datos';
     $titulo.textContent = paso === 'datos' ? 'Tus datos' : 'Tu pedido';
-    if (paso === 'datos') pintarResumen();
+    if (paso === 'datos') { pintarResumen(); prepararFecha(); }
     $panel.scrollTop = 0;
     const primero = $panel.querySelector(`[data-paso="${paso}"] input, [data-paso="${paso}"] button`);
     if (paso === 'datos' && primero) primero.focus();
@@ -321,7 +336,7 @@
       bloques.join('\n\n'),
       '',
       `Entrega: ${entrega}`,
-      fecha ? `Fecha preferida: ${fecha}` : null,
+      fecha ? `${horasAnticipacion() ? 'Fecha de retiro' : 'Fecha preferida'}: ${fecha}` : null,
       `Es para: ${para}`,
       `Nombre: ${datos.get('nombre')}`,
       `Teléfono: ${datos.get('telefono')}`,

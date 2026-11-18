@@ -19,13 +19,13 @@
 
   /* ---------- Pestañas ---------- */
   $tabs.innerHTML = secciones.map((s) => `
-    <button type="button" role="tab" id="tab-${s.id}" aria-controls="panel-${s.id}" data-seccion="${s.id}">${s.nombre}</button>`).join('');
+    <button type="button" role="tab" id="tab-${s.id}" aria-controls="panel-${s.id}" data-seccion="${s.id}">${s.nombreCorto || s.nombre}</button>`).join('');
 
   /* ---------- Paneles con tarjetas ---------- */
   $paneles.innerHTML = secciones.map((s) => {
     const items = productos.filter((p) => p.seccion === s.id);
     return `<section class="tienda-panel" role="tabpanel" id="panel-${s.id}" aria-labelledby="tab-${s.id}" tabindex="-1">
-      <p class="tienda-panel__bajada">${s.bajada}</p>
+      ${s.bajada ? `<p class="tienda-panel__bajada">${s.bajada}</p>` : ''}
       <ul class="grilla-platos grilla-productos">${items.map(tarjetaHTML).join('')}</ul>
     </section>`;
   }).join('');
@@ -39,6 +39,7 @@
           <p class="producto-card__contenido">${escapar(p.contenido)}</p>
           <h3 class="plato-card__nombre"><button type="button" class="plato-card__abrir" data-abrir="${p.id}">${escapar(p.nombre)}</button></h3>
           <p class="plato-card__desc">${escapar(p.descripcion)}</p>
+          ${p.dietas && p.dietas.length ? `<div class="plato-card__tags">${etiquetasDieta(p.dietas)}</div>` : ''}
           ${p.ejemplo ? '<p class="producto-card__ejemplo">Producto de ejemplo</p>' : ''}
           ${p.fotoProvisoria ? '<p class="producto-card__ejemplo">Foto provisoria</p>' : ''}
           <div class="plato-card__pie">

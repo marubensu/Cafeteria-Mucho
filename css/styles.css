@@ -950,6 +950,12 @@ body.pagina-encargos::before {
 .tienda-tabs [aria-selected="true"]:hover { color: var(--blanco); }
 .tienda-panel:focus { outline: none; }
 .tienda-panel__bajada { margin-bottom: 24px; font-size: 18px; color: var(--tinta-suave); }
+.tienda-titulo p.bajada { max-width: none; }
+/* Desktop: la bajada de la tienda va en una sola línea */
+@media (min-width: 961px) { .tienda-titulo p.bajada { white-space: nowrap; } }
+.pedido__aviso-tortas { margin: -6px 0 16px; font-size: 14px; color: var(--cafe-oscuro); }
+.pedido__aviso-tortas[hidden] { display: none; }
+.producto-card .plato-card__tags { margin-top: 2px; }
 .tienda-nota { margin-top: 48px; max-width: 760px; font-size: 17px; color: var(--tinta-suave); }
 .tienda-nota a { color: var(--tinta); font-family: var(--fuente-titulos); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--cafe); }
 
@@ -1373,7 +1379,7 @@ html.pedido-abierto { overflow: hidden; }
 }
 @media (max-width: 640px) {
   .tienda-tabs { display: flex; width: 100%; }
-  .tienda-tabs [role="tab"] { flex: 1; padding: 10px 8px; font-size: 15px; }
+  .tienda-tabs [role="tab"] { flex: 1; padding: 10px 4px; font-size: 14px; letter-spacing: 0.04em; }
   .grilla-productos { grid-template-columns: 1fr; }
   .producto-card .plato-card__foto { width: 112px; }
   .producto-card .plato-card__desc { -webkit-line-clamp: 2; font-size: 14px; }
