@@ -40,7 +40,7 @@
           <h3 class="plato-card__nombre"><button type="button" class="plato-card__abrir" data-abrir="${p.id}">${escapar(p.nombre)}</button></h3>
           <p class="plato-card__desc">${escapar(p.descripcion)}</p>
           ${p.dietas && p.dietas.length ? `<div class="plato-card__tags">${etiquetasDieta(p.dietas)}</div>` : ''}
-          ${p.ejemplo ? '<p class="producto-card__ejemplo">Producto de ejemplo</p>' : ''}
+          ${p.ejemplo ? '<p class="producto-card__ejemplo">Nombre provisorio</p>' : ''}
           ${p.fotoProvisoria ? '<p class="producto-card__ejemplo">Foto provisoria</p>' : ''}
           <div class="plato-card__pie">
             <span class="producto-card__precio ${typeof p.precio === 'number' ? 'precio' : ''}">${textoPrecio(p)}</span>
@@ -122,7 +122,7 @@
         <p class="producto-card__contenido">${escapar(p.contenido)}</p>
         <p class="ficha__desc">${escapar(p.descripcion)}</p>
         <p class="ficha-producto__precio ${typeof p.precio === 'number' ? 'precio' : ''}">${textoPrecio(p)}</p>
-        ${p.ejemplo ? '<p class="producto-card__ejemplo">Producto de ejemplo: foto, nombre y descripción provisorios</p>' : ''}
+        ${p.ejemplo ? '<p class="producto-card__ejemplo">Nombre, descripción y tamaños provisorios</p>' : ''}
         ${pesos.length > 1 ? `<fieldset class="ficha-producto__grupo">
             <legend>Tamaño</legend>
             ${pesos.map((g, i) => `<label class="opcion-pill"><input type="radio" name="peso" value="${g}" ${i === 0 ? 'checked' : ''}><span>${formatoPeso(g)}</span></label>`).join('')}
