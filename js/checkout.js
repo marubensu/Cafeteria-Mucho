@@ -502,7 +502,6 @@
       <p class="confirmacion__llegada">${escapar(llegada)}${efectivo ? ' Lo pagás al retirar.' : ''}</p>
       <p class="confirmacion__numero">Pedido ${escapar(p.numero)} · ${formatoPrecio(p.total)}</p>
       <p class="confirmacion__texto">Te mandamos el detalle a <strong>${escapar(p.email)}</strong>.</p>
-      ${p.demo ? '<p class="checkout-demo">Modo demostración: no se realizó ningún cobro.</p>' : ''}
       <ul class="checkout-resumen confirmacion__items">${p.items.map((it) => `<li><span>${escapar(it.nombre)} <em>${escapar(it.detalle)}</em></span><span>${formatoPrecio(it.subtotal)}</span></li>`).join('')}
         ${p.envio ? `<li><span>Envío</span><span>${formatoPrecio(p.envio)}</span></li>` : ''}
       </ul>
