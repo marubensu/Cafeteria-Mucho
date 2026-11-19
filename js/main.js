@@ -184,6 +184,41 @@
     circulados.forEach((c) => obs.observe(c));
   }
 
+  /* ---------- Inicio: granos de café que caen por detrás del vaso ---------- */
+  const heroImagen = document.querySelector('.hero__imagen');
+  const sinMovimientoHero = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (heroImagen && !sinMovimientoHero && CSS.supports('container-type', 'size')) {
+    const lluvia = document.createElement('div');
+    lluvia.className = 'hero__lluvia';
+    lluvia.setAttribute('aria-hidden', 'true');
+    const cantidad = window.matchMedia('(max-width: 640px)').matches ? 9 : 14;
+    const azar = (min, max) => min + Math.random() * (max - min);
+    for (let i = 0; i < cantidad; i++) {
+      const grano = document.createElement('img');
+      grano.src = `assets/img/decoracion/granos/grano-${(i % 7) + 1}.png`;
+      grano.alt = '';
+      grano.className = 'grano-cae';
+      const lejos = i % 4 === 3;                       // algunos más chicos y desenfocados: dan profundidad
+      const ancho = lejos ? azar(6, 8) : azar(9, 14);  // % del ancho de la imagen
+      const dur = lejos ? azar(6.5, 8.5) : azar(4.2, 6.2);
+      grano.style.width = `${ancho}cqw`;
+      grano.style.setProperty('--x0', `${azar(-25, 70)}cqw`);
+      grano.style.setProperty('--dx', `${azar(30, 50)}cqw`);
+      grano.style.setProperty('--r0', `${azar(-180, 180)}deg`);
+      grano.style.setProperty('--r1', `${azar(-180, 180) + (Math.random() < 0.5 ? -1 : 1) * azar(240, 480)}deg`);
+      grano.style.setProperty('--dur', `${dur}s`);
+      grano.style.setProperty('--delay', `${-azar(0, dur)}s`); // negativo: ya hay granos cayendo al cargar
+      if (lejos) grano.classList.add('lejos');
+      lluvia.appendChild(grano);
+    }
+    heroImagen.insertBefore(lluvia, heroImagen.querySelector('.hero__vaso'));
+    heroImagen.classList.add('lluvia-activa');
+    // Fuera de pantalla, la animación se pausa
+    new IntersectionObserver((entradas) => {
+      entradas.forEach((e) => heroImagen.classList.toggle('lluvia-pausa', !e.isIntersecting));
+    }).observe(heroImagen);
+  }
+
   /* ---------- Perro pet-friendly: mueve la cola al aparecer en pantalla y al pasar o tocar ---------- */
   document.querySelectorAll('.perro-animado').forEach((perro) => {
     const menear = () => {

@@ -510,6 +510,23 @@ body.pagina-contacto {
 .hero__granos--1 { width: 62%; left: -6%; top: -4%; transform: rotate(-12deg); }
 .hero__granos--2 { width: 48%; right: -10%; bottom: 2%; transform: rotate(160deg); opacity: 0.95; }
 
+/* Lluvia de granos: caen en diagonal (arriba-izquierda → abajo-derecha) por detrás del vaso y las manos */
+.hero__imagen { container-type: size; }
+.hero__lluvia { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.hero__imagen.lluvia-activa .hero__granos { display: none; }  /* con animación, los granos quietos se ocultan */
+.grano-cae {
+  position: absolute; left: 0; top: 0; height: auto; will-change: transform;
+  animation: grano-cae var(--dur) linear var(--delay) infinite;
+  transform: translate(var(--x0), -30cqh) rotate(var(--r0));
+}
+.grano-cae.lejos { opacity: 0.85; filter: blur(1.2px); }
+.hero__imagen.lluvia-pausa .grano-cae { animation-play-state: paused; }
+@keyframes grano-cae {
+  from { transform: translate(var(--x0), -30cqh) rotate(var(--r0)); }
+  to   { transform: translate(calc(var(--x0) + var(--dx)), 115cqh) rotate(var(--r1)); }
+}
+@media (prefers-reduced-motion: reduce) { .hero__lluvia { display: none; } .hero__imagen.lluvia-activa .hero__granos { display: block; } }
+
 .hero__sello {
   position: absolute; left: 36px; top: 36px;
   color: var(--blanco);
