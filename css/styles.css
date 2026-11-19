@@ -272,16 +272,42 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .footer-escena img { display: block; width: 100%; height: auto; }
 .footer-escena__perro, .footer-escena__paso { position: absolute; inset: 0; }
 .footer-escena__cola { position: absolute; inset: 0; transform-origin: 14% 75.66%; }
+/* Patas: cada una gira desde la cadera o el hombro */
+.footer-escena__pata { position: absolute; inset: 0; }
+.footer-escena__pata--trasera-cerca { transform-origin: 17.95% 84.06%; }
+.footer-escena__pata--trasera-lejos { transform-origin: 14.36% 83.71%; }
+.footer-escena__pata--delantera-cerca { transform-origin: 32.32% 83.01%; }
+.footer-escena__pata--delantera-lejos { transform-origin: 37.34% 83.36%; }
+/* Trote: los pares en diagonal se mueven juntos y alternan con el otro par */
+.footer-escena.camina .footer-escena__pata--trasera-cerca,
+.footer-escena.camina .footer-escena__pata--delantera-lejos { animation: pata-par-a 3.6s ease-in-out; }
+.footer-escena.camina .footer-escena__pata--trasera-lejos,
+.footer-escena.camina .footer-escena__pata--delantera-cerca { animation: pata-par-b 3.6s ease-in-out; }
 /* Estado inicial (lo pone JS solo si va a animar): el perro espera fuera de escena */
 .footer-escena.lista .footer-escena__perro { transform: translateX(-75%); opacity: 0; }
-.footer-escena.camina .footer-escena__perro { animation: perro-llega 3.6s cubic-bezier(0.25, 0.6, 0.35, 1) forwards; }
+.footer-escena.camina .footer-escena__perro { animation: perro-llega 3.6s cubic-bezier(0.3, 0.35, 0.5, 1) forwards; }
 /* Pasos: sube y baja apenas, con un leve balanceo, y frena al llegar */
-.footer-escena.camina .footer-escena__paso { transform-origin: 25% 90%; animation: perro-paso 0.45s ease-in-out 7; }
-.footer-escena.camina .footer-escena__cola { animation: cola-camina 0.45s ease-in-out 7, cola-feliz 1.6s ease-in-out 3.4s; }
+.footer-escena.camina .footer-escena__paso { transform-origin: 25% 90%; animation: perro-paso 0.45s ease-in-out 8; }
+.footer-escena.camina .footer-escena__cola { animation: cola-camina 0.45s ease-in-out 8, cola-feliz 1.6s ease-in-out 3.6s; }
 @keyframes perro-llega {
   0% { transform: translateX(-75%); opacity: 0; }
   12% { opacity: 1; }
   100% { transform: none; opacity: 1; }
+}
+/* 4 trancos de 0,9 s; el último más corto porque el perro frena (ángulo negativo = pata hacia adelante) */
+@keyframes pata-par-a {
+  0%, 12.5%, 25%, 37.5%, 50%, 62.5%, 75%, 87.5%, 100% { transform: rotate(0deg); }
+  6.25%, 31.25%, 56.25% { transform: rotate(-10deg); }
+  18.75%, 43.75%, 68.75% { transform: rotate(8deg); }
+  81.25% { transform: rotate(-5deg); }
+  93.75% { transform: rotate(3deg); }
+}
+@keyframes pata-par-b {
+  0%, 12.5%, 25%, 37.5%, 50%, 62.5%, 75%, 87.5%, 100% { transform: rotate(0deg); }
+  6.25%, 31.25%, 56.25% { transform: rotate(8deg); }
+  18.75%, 43.75%, 68.75% { transform: rotate(-10deg); }
+  81.25% { transform: rotate(3deg); }
+  93.75% { transform: rotate(-5deg); }
 }
 @keyframes perro-paso {
   0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -301,7 +327,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 @media (prefers-reduced-motion: reduce) {
   .footer-escena.lista .footer-escena__perro { transform: none; opacity: 1; }
-  .footer-escena.camina .footer-escena__perro, .footer-escena.camina .footer-escena__paso, .footer-escena.camina .footer-escena__cola { animation: none; }
+  .footer-escena.camina .footer-escena__perro, .footer-escena.camina .footer-escena__paso, .footer-escena.camina .footer-escena__cola, .footer-escena.camina .footer-escena__pata { animation: none; }
 }
 .footer__marca img { height: 64px; width: auto; margin-bottom: 20px; }
 .footer__marca p { max-width: 280px; color: rgba(255, 253, 250, 0.82); font-size: 16px; }
