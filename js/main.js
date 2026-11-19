@@ -198,6 +198,22 @@
     obs.observe(perro);
   });
 
+  /* ---------- Footer: el perro llega caminando hasta sus humanos ---------- */
+  // Si no hay JS o la persona pidió menos movimiento, el perro ya está en su lugar
+  const escena = document.querySelector('.footer-escena');
+  const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (escena && 'IntersectionObserver' in window && !sinMovimiento) {
+    escena.classList.add('lista');
+    const obsEscena = new IntersectionObserver((entradas) => {
+      entradas.forEach((e) => {
+        if (!e.isIntersecting) return;
+        escena.classList.add('camina');
+        obsEscena.disconnect();
+      });
+    }, { threshold: 0.5 });
+    obsEscena.observe(escena);
+  }
+
   pintarEstado();
   pintarHorarios();
   setInterval(pintarEstado, 60 * 1000);

@@ -268,6 +268,41 @@ button, input, select, textarea { font: inherit; color: inherit; }
   margin-bottom: -64px; /* los pies apoyan sobre la línea del footer legal */
   pointer-events: none;
 }
+/* Escena del footer: el perro llega caminando desde la izquierda hasta sus humanos */
+.footer-escena img { display: block; width: 100%; height: auto; }
+.footer-escena__perro, .footer-escena__paso { position: absolute; inset: 0; }
+.footer-escena__cola { position: absolute; inset: 0; transform-origin: 14% 75.66%; }
+/* Estado inicial (lo pone JS solo si va a animar): el perro espera fuera de escena */
+.footer-escena.lista .footer-escena__perro { transform: translateX(-75%); opacity: 0; }
+.footer-escena.camina .footer-escena__perro { animation: perro-llega 3.6s cubic-bezier(0.25, 0.6, 0.35, 1) forwards; }
+/* Pasos: sube y baja apenas, con un leve balanceo, y frena al llegar */
+.footer-escena.camina .footer-escena__paso { transform-origin: 25% 90%; animation: perro-paso 0.45s ease-in-out 7; }
+.footer-escena.camina .footer-escena__cola { animation: cola-camina 0.45s ease-in-out 7, cola-feliz 1.6s ease-in-out 3.4s; }
+@keyframes perro-llega {
+  0% { transform: translateX(-75%); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes perro-paso {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-1.1%) rotate(-1.2deg); }
+  75% { transform: translateY(-0.4%) rotate(0.8deg); }
+}
+@keyframes cola-camina {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-9deg); }
+}
+@keyframes cola-feliz {
+  0%, 100% { transform: rotate(0deg); }
+  10%, 30%, 50% { transform: rotate(-16deg); }
+  20%, 40%, 60% { transform: rotate(7deg); }
+  75% { transform: rotate(-8deg); }
+  88% { transform: rotate(3deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-escena.lista .footer-escena__perro { transform: none; opacity: 1; }
+  .footer-escena.camina .footer-escena__perro, .footer-escena.camina .footer-escena__paso, .footer-escena.camina .footer-escena__cola { animation: none; }
+}
 .footer__marca img { height: 64px; width: auto; margin-bottom: 20px; }
 .footer__marca p { max-width: 280px; color: rgba(255, 253, 250, 0.82); font-size: 16px; }
 .footer h2 {
