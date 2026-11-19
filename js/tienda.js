@@ -97,6 +97,14 @@
       if (activa && conFoco) t.focus();
     });
     $paneles.querySelectorAll('[role="tabpanel"]').forEach((p) => { p.hidden = p.id !== `panel-${id}`; });
+    // En pantallas angostas la barra se desliza: la pestaña elegida queda siempre a la vista
+    const $activa = $tabs.querySelector('[aria-selected="true"]');
+    if ($activa && $tabs.scrollWidth > $tabs.clientWidth) {
+      const barra = $tabs.getBoundingClientRect(); const pestaña = $activa.getBoundingClientRect();
+      const margen = parseFloat(getComputedStyle($tabs).paddingRight) || 0;
+      if (pestaña.right > barra.right - margen) $tabs.scrollLeft += pestaña.right - (barra.right - margen);
+      else if (pestaña.left < barra.left) $tabs.scrollLeft -= barra.left - pestaña.left;
+    }
     const url = new URL(location.href);
     url.searchParams.set('seccion', id);
     history.replaceState(null, '', url);

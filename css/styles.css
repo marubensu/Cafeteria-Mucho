@@ -1835,8 +1835,13 @@ html.cargando-pago { overflow: hidden; }
 }
 @media (max-width: 640px) {
   /* Mobile: pestañas como píldoras sueltas que bajan de línea si no entran (cada texto en una sola línea) */
-  .tienda-tabs { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; padding: 0; border: 0; background: none; }
-  .tienda-tabs [role="tab"] { flex: 0 0 auto; padding: 10px 16px; white-space: nowrap; font-size: 14px; letter-spacing: 0.05em; border: 1.5px solid var(--linea); background: var(--blanco); }
+  .tienda-tabs {
+    display: flex; flex-wrap: nowrap; gap: 6px; width: auto; padding: 0; border: 0; background: none;
+    /* Las tres pestañas en una línea; si no entran (celulares muy angostos) se deslizan hasta el borde */
+    overflow-x: auto; scrollbar-width: none; margin-right: calc(-1 * var(--margen)); padding-right: var(--margen);
+  }
+  .tienda-tabs::-webkit-scrollbar { display: none; }
+  .tienda-tabs [role="tab"] { flex: 0 0 auto; padding: 10px 11px; white-space: nowrap; font-size: 13px; letter-spacing: 0.03em; border: 1.5px solid var(--linea); background: var(--blanco); }
   .tienda-tabs [role="tab"][aria-selected="true"] { background: var(--tinta); border-color: var(--tinta); color: var(--blanco); }
   .grilla-productos { grid-template-columns: 1fr; }
   .producto-card .plato-card__foto { width: 112px; }
