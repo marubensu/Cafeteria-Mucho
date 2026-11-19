@@ -1748,6 +1748,16 @@ html.cargando-pago { overflow: hidden; }
   .footer__grilla { grid-template-columns: 1fr; gap: 28px; padding-top: 44px; }
   .footer__dibujo { grid-column: auto; justify-self: center; max-width: 180px; }
   .footer__marca img { height: 54px; }
+  /* Footer mobile: solo Dónde y Contacto (cada uno en una línea) y la escena de los humanos con el perro */
+  .footer__marca, .footer__horas, .footer__legal { display: none; }
+  .footer__grilla { gap: 22px; padding-bottom: 0; text-align: center; }
+  .footer h2 { margin-bottom: 6px; }
+  .footer__donde address, .footer__contacto ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; column-gap: 0; font-size: 16px; line-height: 1.6; }
+  .footer__donde address br { display: none; }
+  .footer__donde address > *:not(:last-child)::after,
+  .footer__contacto li:not(:last-child)::after { content: '·'; margin: 0 8px; color: rgba(255, 253, 250, 0.55); }
+  .footer__contacto li { font-size: 16px; line-height: 1.6; }
+  .footer__dibujo { margin-top: 6px; margin-bottom: 0; max-width: 200px; }
 
   /* WhatsApp flotante: solo el ícono */
   .wa-flotante { right: 16px; bottom: 16px; width: 56px; padding: 0; justify-content: center; font-size: 0; gap: 0; }
@@ -1812,6 +1822,8 @@ html.cargando-pago { overflow: hidden; }
 }
 /* Pantallas muy angostas: el estado del local muestra solo "Abierto" o "Cerrado" */
 @media (max-width: 374px) {
+  .footer__donde address, .footer__contacto ul, .footer__contacto li { font-size: 14px; }
+  .footer__donde address > *:not(:last-child)::after, .footer__contacto li:not(:last-child)::after { margin: 0 6px; }
   .estado__extra { display: none; }
   .header__acciones { gap: 8px; }
 }
