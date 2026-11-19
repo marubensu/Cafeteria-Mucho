@@ -225,7 +225,7 @@ function etiquetasDieta(dietas) {
 
 // Foto del ítem o, si todavía no hay, un espacio reservado con su nombre
 // Subí este número cada vez que se reemplace o edite una foto, para que el navegador no muestre la vieja
-const VERSION_FOTOS = 8;
+const VERSION_FOTOS = 9;
 
 function fotoHTML(foto, alt, clase = '', posicion = '', zoom = 1) {
   const reglas = [];
