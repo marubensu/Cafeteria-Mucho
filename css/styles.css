@@ -18,6 +18,8 @@
   --blanco: #fffdfa;
   --abierto: #56744a;
   --cerrado: #a0533f;
+  --error: #c62828;
+  --error-fondo: #fdf0ef;
 
   /* Tipografía */
   /* Alternativas libres a las tipografías de Milk & Madu:
@@ -1185,8 +1187,14 @@ html.pedido-abierto { overflow: hidden; }
 .grilla-form .campo--completo { grid-column: 1 / -1; }
 .grilla-form .campo { align-content: start; }
 .grilla-form--tarjeta { margin-top: 16px; grid-template-columns: 1fr 1fr; }
-.campo--error input { border-color: var(--cerrado); }
-.campo__error { color: var(--cerrado); font-size: 14px; line-height: 1.35; }
+/* Campos con error: borde y fondo rojos, también cuando el campo tiene el foco */
+.campo.campo--error input, .campo.campo--error input:focus, .campo.campo--error select, .campo.campo--error textarea {
+  border-color: var(--error); border-width: 2px; background-color: var(--error-fondo);
+}
+.campo.campo--error input:focus { box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.18); }
+.campo.campo--error label { color: var(--error); }
+.campo__error { display: flex; gap: 6px; align-items: flex-start; color: var(--error); font-size: 14px; font-weight: 500; line-height: 1.35; }
+.campo__error::before { content: '!'; flex: none; display: grid; place-content: center; width: 16px; height: 16px; margin-top: 1px; border-radius: 50%; background: var(--error); color: #fff; font-size: 11px; font-weight: 700; }
 .campo__error[hidden] { display: none; }
 .check { display: inline-flex; align-items: center; gap: 10px; margin: 2px 0 16px; cursor: pointer; font-size: 16px; }
 .check input { width: 20px; height: 20px; accent-color: var(--tinta); }

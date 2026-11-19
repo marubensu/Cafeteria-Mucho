@@ -269,7 +269,6 @@
   function iniciarPago() {
     if (resumen().vacio) { location.replace('carrito.html'); return; }
     pintarPasos(1);
-    $('[data-demo]').hidden = !demo;
     const form = $('#pago-form');
     const tarjeta = { tarjetaNumero: '', tarjetaVencimiento: '', tarjetaCodigo: '' }; // solo en memoria
     const GUARDADOS = ['nombre', 'email', 'telefono', 'negocio', 'direccion', 'cp', 'indicaciones', 'fecha'];
