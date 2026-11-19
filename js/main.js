@@ -182,6 +182,22 @@
     circulados.forEach((c) => obs.observe(c));
   }
 
+  /* ---------- Perro pet-friendly: mueve la cola al aparecer en pantalla y al pasar o tocar ---------- */
+  document.querySelectorAll('.perro-animado').forEach((perro) => {
+    const menear = () => {
+      perro.classList.remove('menea');
+      void perro.offsetWidth; // reinicia la animación
+      perro.classList.add('menea');
+    };
+    perro.addEventListener('animationend', () => perro.classList.remove('menea'));
+    perro.addEventListener('mouseenter', menear);
+    perro.addEventListener('click', menear);
+    const obs = new IntersectionObserver((entradas) => {
+      entradas.forEach((e) => { if (e.isIntersecting) { menear(); obs.disconnect(); } });
+    }, { threshold: 0.6 });
+    obs.observe(perro);
+  });
+
   pintarEstado();
   pintarHorarios();
   setInterval(pintarEstado, 60 * 1000);
