@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Pago · MUCHO</title>
+  <meta name="description" content="Completá tus datos, la entrega y el medio de pago.">
+  <link rel="icon" type="image/png" href="assets/img/logos/logo-mucho-cafe.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;1,400&family=Yellowtail&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="pagina-checkout" data-checkout="pago">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="header">
+    <div class="contenedor header__barra">
+      <a class="header__logo" href="index.html" aria-label="MUCHO, ir al inicio">
+        <img src="assets/img/logos/logo-mucho-cafe.png" alt="MUCHO" width="68" height="44">
+      </a>
+      <nav class="header__nav" id="nav-principal" aria-label="Principal">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a class="nav-menu" href="menu.html">Menú</a></li>
+          <li><a href="el-lugar.html">El lugar</a></li>
+          <li><a href="encargos.html">Encargos</a></li>
+          <li><a href="tienda.html" aria-current="page">Tienda</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+      <div class="header__acciones">
+        <a class="estado" href="el-lugar.html#horarios" data-estado="largo"><span class="estado__texto">Lunes a viernes 8 a 20 h</span></a>
+        <button class="header__toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-principal">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido" class="contenedor checkout">
+    <div id="checkout-pasos"></div>
+    <div class="checkout-columnas">
+      <form class="checkout-principal pago-form" id="pago-form" novalidate aria-labelledby="titulo-pago">
+        <h1 class="checkout-titulo" id="titulo-pago">Pago</h1>
+        <p class="checkout-demo" data-demo>Modo demostración: podés probar todo el recorrido, pero no se realiza ningún cobro.</p>
+
+        <section class="pago-paso" aria-labelledby="pago-paso-1">
+          <div class="pago-paso__cabecera"><span class="pago-paso__numero">01</span><h2 class="pago-paso__titulo" id="pago-paso-1">Tus datos</h2></div>
+          <div id="pago-datos"></div>
+        </section>
+
+        <section class="pago-paso" aria-labelledby="pago-paso-2">
+          <div class="pago-paso__cabecera"><span class="pago-paso__numero">02</span><h2 class="pago-paso__titulo" id="pago-paso-2">Entrega</h2></div>
+          <div id="pago-entrega"></div>
+        </section>
+
+        <section class="pago-paso" aria-labelledby="pago-paso-3">
+          <div class="pago-paso__cabecera"><span class="pago-paso__numero">03</span><h2 class="pago-paso__titulo" id="pago-paso-3">Medio de pago</h2></div>
+          <div id="pago-medio"></div>
+        </section>
+      </form>
+      <aside class="checkout-panel" id="pago-panel" aria-label="Resumen del pedido"></aside>
+    </div>
+
+    <!-- Mobile: botón de pago siempre a mano -->
+    <div class="pago-barra-movil"><button type="button" class="btn btn--primario btn--ancho" id="pago-boton-movil">Pagar</button></div>
+
+    <div class="pago-redireccion" id="pago-redireccion" hidden role="status">
+      <div class="pago-redireccion__caja"><span class="pago-redireccion__spinner" aria-hidden="true"></span><p>Te estamos llevando a Mercado Pago…</p></div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pedido.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

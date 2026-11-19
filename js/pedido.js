@@ -3,7 +3,7 @@
    Se carga en todas las páginas, después de data.js y main.js.
    - Guarda el pedido en el navegador (sobrevive al cambiar de página)
    - Suma el botón de la bolsa al header
-   - Panel "Tu pedido": lista → datos → se envía armado por WhatsApp
+   - Panel "Tu pedido": vista rápida que lleva al checkout (carrito → pago → confirmación)
    API para otras páginas: window.Pedido.agregar(), .cambiar(), .lineas(), .alCambiar(), .abrir()
    ========================================================================== */
 
@@ -13,6 +13,7 @@
   const productos = Object.fromEntries(tienda.productos.map((p) => [p.id, p]));
 
   /* ---------- Utilidades de texto ---------- */
+  const enCheckout = /\/(carrito|pago|confirmacion)\.html$/.test(location.pathname);
   const formatoPeso = (g) => (g >= 1000 ? `${(g / 1000).toLocaleString('es-AR')} kg` : `${g} g`);
   const escapar = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -83,6 +84,17 @@
       else lineas.push({ id: linea.id, peso: linea.peso || null, opcion: linea.opcion || null, cantidad });
       avisar();
     },
+    // Vuelve a poner una línea quitada en su lugar (para "Deshacer")
+    restaurar(linea, indice) {
+      if (lineas.some((x) => claveLinea(x) === claveLinea(linea))) return;
+      lineas.splice(Math.min(indice, lineas.length), 0, { ...linea });
+      avisar();
+    },
+    subtotal: (l) => subtotalLinea(l),
+    total: () => totalPedido(),
+    // Horas de anticipación que exige el pedido (las tortas por encargo piden 48 h)
+    anticipacion: () => Math.max(0, ...lineas.map((l) => productos[l.id].anticipacionHoras || 0)),
+    producto: (id) => productos[id],
     vaciar() { lineas = []; avisar(); },
     alCambiar(fn) { oyentes.push(fn); },
     abrir: () => abrirPanel()
@@ -121,123 +133,39 @@
     if ($botonHeader) { $botonHeader.classList.remove('rebote'); void $botonHeader.offsetWidth; $botonHeader.classList.add('rebote'); }
   }
 
-  /* ---------- Panel "Tu pedido" ---------- */
+  /* ---------- Panel "Tu pedido" (vista rápida; el checkout está en carrito.html → pago.html) ---------- */
   const $panel = document.createElement('dialog');
   $panel.className = 'pedido';
   $panel.setAttribute('aria-labelledby', 'pedido-titulo');
   $panel.innerHTML = `
     <div class="pedido__cabecera">
-      <button type="button" class="pedido__volver" data-paso-ir="lista" hidden aria-label="Volver a la lista">←</button>
       <h2 id="pedido-titulo">Tu pedido</h2>
       <button type="button" class="ficha__cerrar pedido__cerrar" data-cerrar aria-label="Cerrar pedido">×</button>
     </div>
-
-    <div class="pedido__paso" data-paso="lista">
+    <div class="pedido__paso">
       <div class="pedido__vacio" hidden>
         <p class="pedido__vacio-titulo">Todavía no agregaste nada.</p>
-        <p>Café para casa y productos de la proveeduría, por docena, por kilo o por unidad.</p>
+        <p>Café para casa, productos de la proveeduría y tortas por encargo.</p>
         <a class="btn btn--primario" href="tienda.html">Ir a la tienda</a>
       </div>
       <ul class="pedido__lineas"></ul>
       <div class="pedido__pie">
-        <p class="pedido__total"><span>Total estimado</span> <strong data-total></strong></p>
-        <p class="pedido__nota">Precios de referencia: te confirmamos el total y la disponibilidad por WhatsApp.</p>
-        <button type="button" class="btn btn--primario btn--ancho" data-paso-ir="datos">Continuar</button>
+        <p class="pedido__total"><span>Subtotal</span> <strong data-total></strong></p>
+        <p class="pedido__nota">El envío y el medio de pago los elegís en el próximo paso.</p>
+        <a class="btn btn--primario btn--ancho" href="carrito.html">Ir al carrito</a>
         <a class="pedido__seguir" href="tienda.html">Seguir agregando</a>
       </div>
-    </div>
-
-    <form class="pedido__paso pedido__form" data-paso="datos" hidden novalidate>
-      <div class="pedido__resumen"></div>
-      <div class="campo">
-        <label for="pedido-nombre">Nombre</label>
-        <input id="pedido-nombre" name="nombre" type="text" autocomplete="name" required>
-      </div>
-      <div class="campo">
-        <label for="pedido-telefono">Teléfono</label>
-        <input id="pedido-telefono" name="telefono" type="tel" autocomplete="tel" placeholder="Ej.: 11 5555-5555" required>
-      </div>
-      <fieldset class="campo pedido__elegir">
-        <legend>Es para</legend>
-        <label class="opcion-pill"><input type="radio" name="para" value="casa" checked><span>Mi casa</span></label>
-        <label class="opcion-pill"><input type="radio" name="para" value="negocio"><span>Mi negocio</span></label>
-      </fieldset>
-      <div class="campo" data-si="para=negocio" hidden>
-        <label for="pedido-negocio">Nombre del negocio <span class="campo__opcional">(opcional)</span></label>
-        <input id="pedido-negocio" name="negocio" type="text" autocomplete="organization">
-      </div>
-      <fieldset class="campo pedido__elegir">
-        <legend>Entrega</legend>
-        <label class="opcion-pill"><input type="radio" name="entrega" value="retiro" checked><span>Retiro en el local</span></label>
-        <label class="opcion-pill"><input type="radio" name="entrega" value="envio"><span>Envío</span></label>
-      </fieldset>
-      <p class="pedido__aviso-tortas" data-aviso-tortas hidden>Las tortas por encargo se retiran en el local.</p>
-      <div class="campo" data-si="entrega=envio" hidden>
-        <label for="pedido-direccion">Dirección de entrega</label>
-        <input id="pedido-direccion" name="direccion" type="text" autocomplete="street-address" placeholder="Calle, número y barrio">
-        <small>Te confirmamos si llegamos a tu zona y el costo del envío.</small>
-      </div>
-      <div class="campo">
-        <label for="pedido-fecha"><span data-fecha-titulo>Fecha preferida</span> <span class="campo__opcional" data-fecha-opcional>(opcional)</span></label>
-        <input id="pedido-fecha" name="fecha" type="date">
-        <small data-fecha-nota hidden></small>
-      </div>
-      <div class="campo">
-        <label for="pedido-comentarios">Comentarios <span class="campo__opcional">(opcional)</span></label>
-        <textarea id="pedido-comentarios" name="comentarios" placeholder="Horario de retiro, factura, alguna aclaración…"></textarea>
-      </div>
-      <button class="btn btn--primario btn--ancho pedido__enviar" type="submit">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>
-        Enviar pedido por WhatsApp
-      </button>
-    </form>
-
-    <div class="pedido__paso pedido__listo" data-paso="enviado" hidden>
-      <p class="pedido__listo-icono" aria-hidden="true">✓</p>
-      <h3>Se abrió WhatsApp con tu pedido</h3>
-      <p>Envialo desde ahí y te respondemos con el precio y la disponibilidad. Si no se abrió, <a href="#" class="pedido__reintentar" target="_blank" rel="noopener">tocá acá</a>.</p>
-      <button type="button" class="btn btn--primario btn--ancho" data-vaciar>Empezar un pedido nuevo</button>
-      <button type="button" class="pedido__seguir" data-paso-ir="lista">Volver a mi pedido</button>
     </div>`;
   document.body.appendChild($panel);
 
   const $lineas = $panel.querySelector('.pedido__lineas');
   const $vacio = $panel.querySelector('.pedido__vacio');
   const $pie = $panel.querySelector('.pedido__pie');
-  const $form = $panel.querySelector('.pedido__form');
-  const $volver = $panel.querySelector('.pedido__volver');
-  const $titulo = $panel.querySelector('#pedido-titulo');
-
-  // Fecha: mañana como mínimo; si hay tortas por encargo, es obligatoria y respeta su anticipación
-  const aISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  const horasAnticipacion = () => Math.max(0, ...lineas.map((l) => productos[l.id].anticipacionHoras || 0));
-  function prepararFecha() {
-    const horas = horasAnticipacion();
-    const conTortas = horas > 0;
-    $form.fecha.min = aISO(new Date(Date.now() + Math.max(24, horas) * 60 * 60 * 1000));
-    $form.fecha.required = conTortas;
-    if ($form.fecha.value && $form.fecha.value < $form.fecha.min) $form.fecha.value = '';
-    $panel.querySelector('[data-fecha-titulo]').textContent = conTortas ? 'Fecha de retiro' : 'Fecha preferida';
-    $panel.querySelector('[data-fecha-opcional]').hidden = conTortas;
-    const $nota = $panel.querySelector('[data-fecha-nota]');
-    $nota.hidden = !conTortas;
-    $nota.textContent = conTortas ? `Las tortas por encargo necesitan al menos ${horas} h de anticipación.` : '';
-    $panel.querySelector('[data-aviso-tortas]').hidden = !conTortas;
-  }
-
-  function irAPaso(paso) {
-    $panel.querySelectorAll('[data-paso]').forEach((el) => { el.hidden = el.dataset.paso !== paso; });
-    $volver.hidden = paso !== 'datos';
-    $titulo.textContent = paso === 'datos' ? 'Tus datos' : 'Tu pedido';
-    if (paso === 'datos') { pintarResumen(); prepararFecha(); }
-    $panel.scrollTop = 0;
-    const primero = $panel.querySelector(`[data-paso="${paso}"] input, [data-paso="${paso}"] button`);
-    if (paso === 'datos' && primero) primero.focus();
-  }
 
   function abrirPanel() {
+    // En el checkout la bolsa lleva directo al carrito
+    if (enCheckout) { location.href = 'carrito.html'; return; }
     $aviso.classList.remove('visible');
-    irAPaso('lista');
     pintarLineas();
     if (!$panel.open) $panel.showModal();
     document.documentElement.classList.add('pedido-abierto');
@@ -245,7 +173,7 @@
   function cerrarPanel() { $panel.close(); }
   $panel.addEventListener('close', () => document.documentElement.classList.remove('pedido-abierto'));
 
-  // Contador – n + (se usa también en la tienda)
+  // Contador – n + (se usa también en la tienda y en el carrito)
   function contadorHTML(cantidad, etiqueta) {
     return `<div class="contador" data-contador>
       <button type="button" data-delta="-1" aria-label="Quitar uno de ${escapar(etiqueta)}">${cantidad === 1 ? '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>' : '–'}</button>
@@ -255,6 +183,12 @@
   }
   window.contadorHTML = contadorHTML;
 
+  const unidadTexto = (p, n) => {
+    const [una, varias] = { docena: ['docena', 'docenas'], peso: ['bolsa', 'bolsas'], unidad: ['unidad', 'unidades'] }[p.venta];
+    return n === 1 ? una : varias;
+  };
+  window.PedidoTexto.unidadTexto = unidadTexto;
+
   function pintarLineas() {
     const hay = lineas.length > 0;
     $vacio.hidden = hay;
@@ -262,7 +196,6 @@
     $lineas.innerHTML = lineas.map((l, i) => {
       const p = productos[l.id];
       const variante = textoVariante(p, l);
-      const [una, varias] = { docena: ['docena', 'docenas'], peso: ['bolsa', 'bolsas'], unidad: ['unidad', 'unidades'] }[p.venta];
       return `<li class="pedido-linea" data-i="${i}">
         <div class="pedido-linea__foto">${fotoHTML(p.foto, p.nombre, '', p.fotoPosicion)}</div>
         <div class="pedido-linea__info">
@@ -270,7 +203,7 @@
           ${variante ? `<p class="pedido-linea__variante">${escapar(variante)}</p>` : ''}
           <div class="pedido-linea__pie">
             ${contadorHTML(l.cantidad, p.nombre)}
-            <span class="pedido-linea__unidad">${l.cantidad === 1 ? una : varias}</span>
+            <span class="pedido-linea__unidad">${unidadTexto(p, l.cantidad)}</span>
             ${subtotalLinea(l) !== null ? `<span class="pedido-linea__precio precio">${formatoPrecio(subtotalLinea(l))}</span>` : ''}
           </div>
         </div>
@@ -295,84 +228,7 @@
   });
 
   $panel.addEventListener('click', (e) => {
-    if (e.target === $panel || e.target.closest('[data-cerrar]')) return cerrarPanel();
-    const ir = e.target.closest('[data-paso-ir]');
-    if (ir) irAPaso(ir.dataset.pasoIr);
-    if (e.target.closest('[data-vaciar]')) { Pedido.vaciar(); $form.reset(); mostrarCondicionales(); cerrarPanel(); }
-  });
-
-  // Campos que aparecen según una elección (negocio, dirección)
-  function mostrarCondicionales() {
-    $form.querySelectorAll('[data-si]').forEach((campo) => {
-      const [nombre, valor] = campo.dataset.si.split('=');
-      const visible = $form.elements[nombre].value === valor;
-      campo.hidden = !visible;
-      campo.querySelectorAll('input').forEach((input) => {
-        if (input.name === 'direccion') input.required = visible;
-      });
-    });
-  }
-  $form.addEventListener('change', mostrarCondicionales);
-
-  function agruparPorSeccion() {
-    return tienda.secciones
-      .map((s) => ({ seccion: s, items: lineas.filter((l) => productos[l.id].seccion === s.id) }))
-      .filter((g) => g.items.length);
-  }
-
-  function pintarResumen() {
-    const total = lineas.length;
-    $panel.querySelector('.pedido__resumen').innerHTML = `
-      <p class="pedido__resumen-titulo">${total === 1 ? '1 producto' : `${total} productos`} <button type="button" class="pedido__editar" data-paso-ir="lista">Editar</button></p>
-      <ul>${lineas.map((l) => `<li>${escapar(productos[l.id].nombre)} <span>${escapar(textoCantidad(productos[l.id], l))}${l.opcion ? ' · ' + escapar(l.opcion) : ''}${subtotalLinea(l) !== null ? ` · ${formatoPrecio(subtotalLinea(l))}` : ''}</span></li>`).join('')}</ul>
-      ${totalPedido() !== null ? `<p class="pedido__resumen-total"><span>Total estimado</span> <strong class="precio">${formatoPrecio(totalPedido())}</strong></p>` : ''}`;
-  }
-
-  /* ---------- Mensaje de WhatsApp ---------- */
-  function armarMensaje(datos) {
-    const bloques = agruparPorSeccion().map(({ seccion, items }) =>
-      [`*${seccion.nombre}*`, ...items.map((l) => {
-        const p = productos[l.id];
-        const sub = subtotalLinea(l);
-        return `• ${p.nombre}: ${textoCantidad(p, l)}${l.opcion ? ` · ${l.opcion}` : ''}${sub !== null ? ` — ${formatoPrecio(sub)}` : ''}`;
-      })].join('\n'));
-
-    const fecha = datos.get('fecha')
-      ? new Date(datos.get('fecha') + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })
-      : '';
-    const entrega = datos.get('entrega') === 'envio'
-      ? `Envío a ${datos.get('direccion')}`
-      : `Retiro en el local (${local.direccion})`;
-    const para = datos.get('para') === 'negocio'
-      ? `Mi negocio${datos.get('negocio') ? ` (${datos.get('negocio')})` : ''}`
-      : 'Mi casa';
-
-    return [
-      'Hola MUCHO, quiero hacer este pedido:',
-      '',
-      bloques.join('\n\n'),
-      '',
-      totalPedido() !== null ? `*Total estimado: ${formatoPrecio(totalPedido())}*` : null,
-      totalPedido() !== null ? '' : null,
-      `Entrega: ${entrega}`,
-      fecha ? `${horasAnticipacion() ? 'Fecha de retiro' : 'Fecha preferida'}: ${fecha}` : null,
-      `Es para: ${para}`,
-      `Nombre: ${datos.get('nombre')}`,
-      `Teléfono: ${datos.get('telefono')}`,
-      datos.get('comentarios') ? `Comentarios: ${datos.get('comentarios')}` : null,
-      '',
-      '¿Me confirman disponibilidad y el total?'
-    ].filter((linea) => linea !== null).join('\n');
-  }
-
-  $form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!lineas.length) return irAPaso('lista');
-    if (!$form.checkValidity()) { $form.reportValidity(); return; }
-    const url = `https://wa.me/${tienda.whatsapp || local.whatsapp}?text=${encodeURIComponent(armarMensaje(new FormData($form)))}`;
-    $panel.querySelector('.pedido__reintentar').href = url;
-    window.open(url, '_blank', 'noopener');
-    irAPaso('enviado');
+    if (e.target === $panel || e.target.closest('[data-cerrar]')) cerrarPanel();
   });
 
   /* ---------- Contadores visibles ---------- */
@@ -385,7 +241,7 @@
     }
     document.querySelectorAll('[data-pedido-cuenta]').forEach((el) => { el.textContent = n === 1 ? '1 producto' : `${n} productos`; });
     document.body.classList.toggle('con-pedido', n > 0);
-    if ($panel.open && !$panel.querySelector('[data-paso="lista"]').hidden) pintarLineas();
+    if ($panel.open) pintarLineas();
   }
   Pedido.alCambiar(actualizarContadores);
   actualizarContadores();

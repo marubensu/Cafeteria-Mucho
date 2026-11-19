@@ -157,6 +157,16 @@ const MUCHO = {
   ------------------------------------------------------------ */
   tienda: {
     whatsapp: '5491176167815', // [a validar] ¿la proveeduría usa otro número?
+    // Checkout: carrito → pago → confirmación
+    checkout: {
+      // 'demo': el pago es una simulación (se avisa en pantalla y no se cobra nada).
+      // Para cobrar de verdad hay que conectar una pasarela (por ej. Mercado Pago Checkout Pro).
+      modoPago: 'demo',
+      prefijoPedido: 'MU-',
+      retiro: { detalle: 'Conesa 2686 · listo en 2 h · sin costo' },
+      envio: { costo: 4500, detalle: 'CABA · 24 a 48 h hábiles' }, // [a validar] costo y zona de envío
+      cuotas: 3
+    },
     secciones: [
       { id: 'cafe', nombre: 'Café para casa', bajada: 'Nuestro café, en grano o molido para tu método.' },
       { id: 'proveeduria', nombre: 'Proveeduría', bajada: '' },
