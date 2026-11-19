@@ -439,8 +439,10 @@
     });
     $('#pago-boton-movil').addEventListener('click', () => form.requestSubmit());
 
+    let enviando = false;
     form.addEventListener('submit', (ev) => {
       ev.preventDefault();
+      if (enviando) return; // evita un doble pago si tocan dos veces
       const e = esquema();
       let primero = null;
       Object.keys(e).forEach((nombre) => {
@@ -464,13 +466,13 @@
         Pedido.vaciar();
         location.href = 'confirmacion.html';
       };
-      // Mercado Pago: en un sitio real acá se redirige a su checkout; en demo se simula el regreso
-      if (estado.medioPago === 'mp') {
-        $('#pago-redireccion').hidden = false;
-        setTimeout(terminar, 1400);
-      } else {
-        terminar();
-      }
+      // Animación de carga ("Cargando...") entre "Pagar" y la confirmación.
+      // Con una pasarela real, acá se esperaría su respuesta (o se redirigiría a Mercado Pago).
+      enviando = true;
+      document.documentElement.classList.add('cargando-pago');
+      $('#pago-carga').hidden = false;
+      const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setTimeout(terminar, menosMovimiento ? 900 : 2900);
     });
 
     Pedido.alCambiar(dibujar);
@@ -481,8 +483,6 @@
      PASO 3 · CONFIRMACIÓN
      ====================================================================== */
   function iniciarConfirmacion() {
-    // El flujo terminó: los tres pasos quedan completos
-    pintarPasos(3);
     const p = leerSesion(CLAVE_ULTIMO, null);
     const $c = $('#confirmacion');
     if (!p) {

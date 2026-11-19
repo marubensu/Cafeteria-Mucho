@@ -375,6 +375,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .plato-card:hover { transform: translateY(-3px); box-shadow: var(--sombra); border-color: transparent; }
 .plato-card__foto { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--arena); }
+/* Recorte firme de las fotos con zoom: Safari a veces no recorta imágenes escaladas con overflow: hidden
+   y la foto se mete sobre el texto de la tarjeta. clip-path sí recorta en todos los navegadores. */
+.plato-card__foto, .ficha__foto { clip-path: inset(0); }
+.pedido-linea__foto { clip-path: inset(0 round 10px); }
+.checkout-item__foto { clip-path: inset(0 round 12px); }
 .plato-card__foto img { width: 100%; height: 100%; object-fit: cover; }
 .plato-card__cuerpo { display: flex; flex-direction: column; flex: 1; gap: 8px; padding: 20px 20px 22px; }
 .plato-card__nombre { font-size: 25px; font-weight: 600; }
@@ -1288,11 +1293,38 @@ html.pedido-abierto { overflow: hidden; }
 .checkout-resumen li span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .checkout-resumen em { font-style: normal; color: var(--tinta-suave); }
 .pago-barra-movil { display: none; }
-.pago-redireccion { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; background: rgba(47, 38, 33, 0.6); backdrop-filter: blur(3px); }
-.pago-redireccion[hidden] { display: none; }
-.pago-redireccion__caja { display: grid; justify-items: center; gap: 14px; padding: 32px 40px; border-radius: var(--radio-card); background: var(--blanco); font-family: var(--fuente-titulos); font-size: 20px; font-weight: 600; }
-.pago-redireccion__spinner { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--linea); border-top-color: var(--tinta); animation: girar 0.8s linear infinite; }
-@keyframes girar { to { transform: rotate(360deg); } }
+/* Carga entre "Pagar" y la confirmación: barra que se llena de café y gotea en una taza */
+.carga { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 24px; background: var(--crema); }
+.carga[hidden] { display: none; }
+html.cargando-pago { overflow: hidden; }
+.carga__dibujo { width: min(420px, 100%); height: auto; overflow: visible; }
+.carga__texto { font-family: var(--fuente-titulos); font-size: 26px; font-weight: 600; letter-spacing: 0.12em; fill: var(--tinta); }
+.carga__punto { animation: carga-punto 1.2s infinite; }
+.carga__punto:nth-child(2) { animation-delay: 0.2s; }
+.carga__punto:nth-child(3) { animation-delay: 0.4s; }
+.carga__marco, .carga__taza { fill: none; stroke: var(--tinta); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.carga__barra, .carga__chorro, .carga__gota, .carga__cafe { fill: #3b2418; }
+.carga__barra { transform-box: fill-box; transform-origin: left center; animation: carga-barra 1.1s ease-in-out both; }
+.carga__chorro { transform-box: fill-box; transform-origin: center top; animation: carga-chorro 0.35s ease-out 1.05s both; }
+.carga__gota { opacity: 0; transform-box: fill-box; transform-origin: center; animation: carga-gota 0.7s ease-in 1.3s infinite; }
+.carga__gota--2 { animation-delay: 1.65s; }
+.carga__cafe { transform-box: fill-box; animation: carga-cafe 1.5s ease-out 1.35s both; }
+@keyframes carga-punto { 0%, 20% { opacity: 0; } 40%, 100% { opacity: 1; } }
+@keyframes carga-barra { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes carga-chorro { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes carga-gota {
+  0% { opacity: 0; transform: translateY(-14px) scale(0.6); }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(58px) scale(1); }
+}
+@keyframes carga-cafe { from { transform: translateY(100%); } to { transform: translateY(14%); } }
+@media (prefers-reduced-motion: reduce) {
+  .carga__barra, .carga__chorro, .carga__cafe { animation: none; }
+  .carga__cafe { transform: translateY(14%); }
+  .carga__gota { animation: none; opacity: 0; }
+  .carga__punto { animation: none; }
+}
 
 /* Aviso breve del checkout */
 .checkout-aviso {
