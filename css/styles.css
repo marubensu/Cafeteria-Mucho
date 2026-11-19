@@ -691,6 +691,8 @@ body.pagina-menu { background-color: #371e17; }
   border: 1.5px solid var(--tinta);
 }
 .filtros h2 { font-size: 22px; margin-bottom: 20px; }
+/* Controles que solo existen en el modal de filtros de mobile */
+.filtros-boton, .filtros__cerrar, .filtros__aplicar, .filtros__limpiar-texto, .menu-filtros__fondo { display: none; }
 .filtros__cabecera { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .filtros__cabecera h2 { margin-bottom: 0; }
 .filtros__limpiar {
@@ -1682,6 +1684,50 @@ html.cargando-pago { overflow: hidden; }
 
   /* Menú */
   .filtros { padding: 18px; }
+  /* Filtros: solo un botón con ícono junto al título; al tocarlo se abren en un modal desde abajo */
+  .pagina-menu .carta__cabecera { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .filtros-boton {
+    position: relative; display: grid; place-content: center; flex: none;
+    width: 48px; height: 48px; padding: 0; border: 0; border-radius: 50%;
+    background: var(--blanco); color: var(--tinta); cursor: pointer;
+    box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.45);
+  }
+  .filtros-boton svg { width: 24px; height: 24px; }
+  .filtros-boton:focus-visible { outline: 2px solid var(--cafe-claro); outline-offset: 3px; }
+  .filtros-boton__cuenta {
+    position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px;
+    border-radius: 999px; background: var(--cafe); color: var(--blanco);
+    font-family: var(--fuente-titulos); font-size: 12px; font-weight: 600; line-height: 20px; text-align: center;
+  }
+  .filtros-boton__cuenta[hidden] { display: none; }
+  .menu-layout > aside.menu-filtros { display: none; }
+  html.filtros-abiertos { overflow: hidden; }
+  html.filtros-abiertos .menu-layout > aside.menu-filtros {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 70;
+    max-height: 88dvh; overflow-y: auto; overscroll-behavior: contain;
+    border-radius: 18px 18px 0 0; animation: subir 260ms ease-out;
+  }
+  html.filtros-abiertos .menu-filtros__fondo:not([hidden]) {
+    display: block; position: fixed; inset: 0; z-index: 69;
+    background: rgba(47, 38, 33, 0.55); backdrop-filter: blur(3px);
+  }
+  .menu-filtros .filtros { max-height: none; overflow: visible; border: 0; border-radius: 18px 18px 0 0; padding: 18px 20px 0; }
+  .menu-filtros .filtros__cabecera { position: sticky; top: 0; z-index: 1; margin: -18px -20px 16px; padding: 14px 20px; background: var(--blanco); border-bottom: 1px solid var(--linea); gap: 10px; }
+  .menu-filtros .filtros__cabecera h2 { flex: 1; font-size: 24px; }
+  .menu-filtros .filtros__limpiar { width: auto; height: 38px; padding: 0 14px; border-radius: var(--radio-boton); font-family: var(--fuente-titulos); font-size: 14px; font-weight: 600; letter-spacing: 0.04em; color: var(--tinta); }
+  .menu-filtros .filtros__limpiar svg { display: none; }
+  .menu-filtros .filtros__limpiar-texto { display: inline; }
+  .filtros__cerrar {
+    display: grid; place-content: center; width: 40px; height: 40px; padding: 0;
+    border: 1.5px solid var(--tinta); border-radius: 50%; background: var(--blanco); color: var(--tinta);
+    font-size: 22px; line-height: 1; cursor: pointer;
+  }
+  .filtros__aplicar {
+    display: block; position: sticky; bottom: 0; z-index: 1;
+    margin: 4px -20px 0; padding: 12px 20px calc(14px + env(safe-area-inset-bottom));
+    background: var(--blanco); border-top: 1px solid var(--linea);
+  }
+  .menu-filtros .filtros__pie { padding-bottom: 4px; }
   .filtros h2 { font-size: 20px; }
   .carta-seccion { padding-bottom: 48px; }
   .carta-seccion__cabecera { flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 18px; }

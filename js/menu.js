@@ -89,6 +89,7 @@
     if ($contador) $contador.textContent = `${visibles.length} ${visibles.length === 1 ? 'ítem' : 'ítems'} · ${veganos} ${veganos === 1 ? 'vegano' : 'veganos'}`;
     $vacio.hidden = visibles.length > 0;
     $avisoGluten.hidden = !estado.dietas.includes('sin-gluten');
+    actualizarBotonFiltros();
 
     // Mediodía: el menú ejecutivo pasa al frente
     document.querySelectorAll('.plato-card__ejecutivo').forEach((el) => {
@@ -96,6 +97,17 @@
     });
 
     actualizarURL();
+  }
+
+  // Mobile: el botón de filtros muestra cuántos hay activos y el modal cuántos platos quedan
+  function actualizarBotonFiltros() {
+    const activos = (estado.momento !== 'todo' ? 1 : 0) + estado.dietas.length;
+    const $cuenta = document.querySelector('.filtros-boton__cuenta');
+    if ($cuenta) { $cuenta.textContent = activos; $cuenta.hidden = activos === 0; }
+    const $boton = document.querySelector('.filtros-boton');
+    if ($boton) $boton.setAttribute('aria-label', activos ? `Filtros: ${activos} ${activos === 1 ? 'activo' : 'activos'}` : 'Filtros');
+    const $resultado = document.querySelector('[data-filtros-resultado]');
+    if ($resultado) $resultado.textContent = visibles.length === 1 ? 'Ver 1 plato' : `Ver ${visibles.length} platos`;
   }
 
   function leerFormulario() {
@@ -138,6 +150,50 @@
     leerFormulario();
     const plato = params.get('plato');
     if (plato && items.some((i) => i.id === plato)) abrirFicha(plato);
+  }
+
+  /* ---------- Mobile: filtros en un modal que se abre con el botón del ícono ---------- */
+  const $botonFiltros = document.querySelector('.filtros-boton');
+  const $panelFiltros = document.getElementById('menu-filtros');
+  const $fondoFiltros = document.querySelector('.menu-filtros__fondo');
+  const esMobile = window.matchMedia('(max-width: 640px)');
+  const filtrosAbiertos = () => document.documentElement.classList.contains('filtros-abiertos');
+
+  function abrirFiltros() {
+    document.documentElement.classList.add('filtros-abiertos');
+    $fondoFiltros.hidden = false;
+    $botonFiltros.setAttribute('aria-expanded', 'true');
+    $panelFiltros.setAttribute('role', 'dialog');
+    $panelFiltros.setAttribute('aria-modal', 'true');
+    $panelFiltros.querySelector('.filtros__cerrar').focus();
+  }
+  function cerrarFiltros(devolverFoco = true) {
+    if (!filtrosAbiertos()) return;
+    document.documentElement.classList.remove('filtros-abiertos');
+    $fondoFiltros.hidden = true;
+    $botonFiltros.setAttribute('aria-expanded', 'false');
+    $panelFiltros.removeAttribute('role');
+    $panelFiltros.removeAttribute('aria-modal');
+    if (devolverFoco) $botonFiltros.focus();
+  }
+  if ($botonFiltros && $panelFiltros) {
+    $botonFiltros.addEventListener('click', abrirFiltros);
+    document.addEventListener('click', (e) => { if (e.target.closest('[data-cerrar-filtros]')) cerrarFiltros(); });
+    // Elegir una categoría cierra el modal y lleva a esa sección
+    $panelFiltros.querySelectorAll('.filtros__anclas a').forEach((a) => a.addEventListener('click', () => cerrarFiltros(false)));
+    document.addEventListener('keydown', (e) => {
+      if (!filtrosAbiertos()) return;
+      if (e.key === 'Escape') { cerrarFiltros(); return; }
+      if (e.key !== 'Tab') return;
+      // El foco queda dentro del modal
+      const enfocables = [...$panelFiltros.querySelectorAll('button, a[href], input')].filter((el) => el.offsetParent !== null);
+      const primero = enfocables[0], ultimo = enfocables[enfocables.length - 1];
+      if (e.shiftKey && document.activeElement === primero) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primero.focus(); }
+    });
+    // Si la pantalla pasa a desktop con el modal abierto, se cierra
+    esMobile.addEventListener('change', (e) => { if (!e.matches) cerrarFiltros(false); });
+    actualizarBotonFiltros();
   }
 
   /* ---------- Anclas: categoría activa según scroll ---------- */

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;1,400&family=Yellowtail&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20261119x">
+  <link rel="stylesheet" href="css/styles.css?v=20261119z">
 </head>
 <body class="pagina-menu">
   <a class="saltar" href="#contenido">Saltar al contenido</a>
@@ -41,13 +41,15 @@
   <main id="contenido" class="contenedor">
     <div class="menu-layout" style="padding-top: 48px;">
       <!-- Filtros: columna izquierda fija -->
-      <aside aria-label="Filtros de la carta">
+      <aside class="menu-filtros" id="menu-filtros" aria-label="Filtros de la carta">
         <form class="filtros" id="filtros">
           <div class="filtros__cabecera">
             <h2>Filtros</h2>
             <button class="filtros__limpiar" type="reset" aria-label="Limpiar filtros" title="Limpiar filtros">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <span class="filtros__limpiar-texto">Limpiar</span>
             </button>
+            <button class="filtros__cerrar" type="button" data-cerrar-filtros aria-label="Cerrar filtros">×</button>
           </div>
           <fieldset>
             <legend>Momento</legend>
@@ -76,6 +78,9 @@
           <div class="filtros__pie">
             <a class="btn btn--chico" id="ver-pdf" href="https://drive.google.com/file/d/1MUdV3CBfI6Q6QCllHXOZJtuH7UE6TNkj/view" target="_blank" rel="noopener">Ver en PDF</a>
           </div>
+          <div class="filtros__aplicar">
+            <button class="btn btn--primario btn--ancho" type="button" data-cerrar-filtros data-filtros-resultado>Ver resultados</button>
+          </div>
         </form>
       </aside>
 
@@ -83,6 +88,10 @@
       <div class="carta">
         <header class="carta__cabecera">
           <h1>Menú</h1>
+          <button class="filtros-boton" type="button" aria-controls="menu-filtros" aria-expanded="false" aria-label="Filtros">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2.2"/><circle cx="10" cy="17" r="2.2"/></svg>
+            <span class="filtros-boton__cuenta" aria-hidden="true" hidden></span>
+          </button>
         </header>
 
         <div class="carta__avisos">
@@ -118,6 +127,9 @@
         </section>
       </div>
     </div>
+
+    <!-- Mobile: fondo oscuro detrás del modal de filtros -->
+    <div class="menu-filtros__fondo" data-cerrar-filtros hidden></div>
 
     <!-- Ficha de plato -->
     <dialog class="ficha" id="ficha" aria-labelledby="ficha-titulo">
@@ -183,10 +195,10 @@
     WhatsApp
   </a>
 
-  <script src="js/data.js?v=20261119x"></script>
-  <script src="js/main.js?v=20261119x"></script>
-  <script src="js/pedido.js?v=20261119x"></script>
-  <script src="js/menu.js?v=20261119x"></script>
+  <script src="js/data.js?v=20261119z"></script>
+  <script src="js/main.js?v=20261119z"></script>
+  <script src="js/pedido.js?v=20261119z"></script>
+  <script src="js/menu.js?v=20261119z"></script>
 
 </body>
 </html>
