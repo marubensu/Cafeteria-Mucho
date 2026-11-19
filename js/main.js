@@ -138,6 +138,8 @@
     flor: (c, f) => [...Array(8)].map((_, i) => { const a = (i * Math.PI) / 4; return `<circle cx="${50 + 27 * Math.cos(a)}" cy="${50 + 27 * Math.sin(a)}" r="17" fill="${c}"/>`; }).join('') + `<circle cx="50" cy="50" r="28" fill="${c}"/><circle cx="50" cy="50" r="9" fill="${f}"/>`,
     // bucle grueso que cruza el recuadro
     bucle: (c) => `<path d="M-8 74 C14 18 44 16 50 48 S86 86 108 26" fill="none" stroke="${c}" stroke-width="15" stroke-linecap="round"/>`,
+    // misma onda, pero sigue hacia la derecha hasta meterse debajo de lo que tenga al lado (ej. el video de El lugar)
+    'bucle-largo': (c) => `<path d="M-8 74 C14 18 44 16 50 48 S86 86 108 26 C116 4 132 -2 170 16" fill="none" stroke="${c}" stroke-width="15" stroke-linecap="round"/>`,
     // grano de cafe
     grano: (c, f) => `<g transform="rotate(-28 50 50)"><ellipse cx="50" cy="52" rx="31" ry="42" fill="${c}"/><path d="M50 12 C34 36 66 66 50 94" fill="none" stroke="${f}" stroke-width="6" stroke-linecap="round"/></g>`
   };
