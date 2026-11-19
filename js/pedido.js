@@ -27,13 +27,23 @@
   function textoVariante(producto, linea) {
     return [producto.venta === 'peso' ? formatoPeso(linea.peso) : '', linea.opcion || ''].filter(Boolean).join(' · ');
   }
-  // Precio por unidad de venta, si el producto lo tiene
+  // Precio de una unidad de venta (una docena, una unidad, una bolsa del tamaño elegido)
+  function precioUnitario(producto, peso) {
+    if (producto.preciosPorPeso) return producto.preciosPorPeso[peso || producto.pesos[0]] ?? null;
+    return typeof producto.precio === 'number' ? producto.precio : null;
+  }
+  const subtotalLinea = (l) => { const u = precioUnitario(productos[l.id], l.peso); return u === null ? null : u * l.cantidad; };
+  // Total estimado: null si algún producto no tiene precio
+  const totalPedido = () => lineas.reduce((t, l) => (t === null || subtotalLinea(l) === null ? null : t + subtotalLinea(l)), 0);
+  // Texto de precio para la tarjeta: "$36.000 la docena", "$450 c/u", "Desde $36.000"
   function textoPrecio(producto) {
+    if (producto.preciosPorPeso) return `Desde ${formatoPrecio(Math.min(...Object.values(producto.preciosPorPeso)))}`;
     if (typeof producto.precio !== 'number') return 'Precio a consultar';
-    const sufijo = { docena: ' / docena', peso: ' / kg', unidad: '' }[producto.venta] || '';
+    const sufijo = producto.venta === 'docena' ? ' la docena' : producto.contenido === 'Por unidad' ? ' c/u' : '';
     return formatoPrecio(producto.precio) + sufijo;
   }
-  window.PedidoTexto = { formatoPeso, textoCantidad, textoVariante, textoPrecio, escapar };
+  const tienePrecio = (producto) => !!producto.preciosPorPeso || typeof producto.precio === 'number';
+  window.PedidoTexto = { formatoPeso, textoCantidad, textoVariante, textoPrecio, precioUnitario, tienePrecio, escapar };
 
   /* ---------- Estado (con localStorage protegido: puede no estar disponible) ---------- */
   const claveLinea = (l) => [l.id, l.peso || '', l.opcion || ''].join('|');
@@ -130,7 +140,8 @@
       </div>
       <ul class="pedido__lineas"></ul>
       <div class="pedido__pie">
-        <p class="pedido__nota">Sin precios en la web: te respondemos por WhatsApp con el precio del día y la disponibilidad.</p>
+        <p class="pedido__total"><span>Total estimado</span> <strong data-total></strong></p>
+        <p class="pedido__nota">Precios de referencia: te confirmamos el total y la disponibilidad por WhatsApp.</p>
         <button type="button" class="btn btn--primario btn--ancho" data-paso-ir="datos">Continuar</button>
         <a class="pedido__seguir" href="tienda.html">Seguir agregando</a>
       </div>
@@ -260,10 +271,14 @@
           <div class="pedido-linea__pie">
             ${contadorHTML(l.cantidad, p.nombre)}
             <span class="pedido-linea__unidad">${l.cantidad === 1 ? una : varias}</span>
+            ${subtotalLinea(l) !== null ? `<span class="pedido-linea__precio precio">${formatoPrecio(subtotalLinea(l))}</span>` : ''}
           </div>
         </div>
       </li>`;
     }).join('');
+    const total = totalPedido();
+    $panel.querySelector('.pedido__total').hidden = !hay || total === null;
+    if (total !== null) $panel.querySelector('[data-total]').textContent = formatoPrecio(total);
   }
 
   $lineas.addEventListener('click', (e) => {
@@ -309,7 +324,8 @@
     const total = lineas.length;
     $panel.querySelector('.pedido__resumen').innerHTML = `
       <p class="pedido__resumen-titulo">${total === 1 ? '1 producto' : `${total} productos`} <button type="button" class="pedido__editar" data-paso-ir="lista">Editar</button></p>
-      <ul>${lineas.map((l) => `<li>${escapar(productos[l.id].nombre)} <span>${escapar(textoCantidad(productos[l.id], l))}${l.opcion ? ' · ' + escapar(l.opcion) : ''}</span></li>`).join('')}</ul>`;
+      <ul>${lineas.map((l) => `<li>${escapar(productos[l.id].nombre)} <span>${escapar(textoCantidad(productos[l.id], l))}${l.opcion ? ' · ' + escapar(l.opcion) : ''}${subtotalLinea(l) !== null ? ` · ${formatoPrecio(subtotalLinea(l))}` : ''}</span></li>`).join('')}</ul>
+      ${totalPedido() !== null ? `<p class="pedido__resumen-total"><span>Total estimado</span> <strong class="precio">${formatoPrecio(totalPedido())}</strong></p>` : ''}`;
   }
 
   /* ---------- Mensaje de WhatsApp ---------- */
@@ -317,7 +333,8 @@
     const bloques = agruparPorSeccion().map(({ seccion, items }) =>
       [`*${seccion.nombre}*`, ...items.map((l) => {
         const p = productos[l.id];
-        return `• ${p.nombre}: ${textoCantidad(p, l)}${l.opcion ? ` · ${l.opcion}` : ''}`;
+        const sub = subtotalLinea(l);
+        return `• ${p.nombre}: ${textoCantidad(p, l)}${l.opcion ? ` · ${l.opcion}` : ''}${sub !== null ? ` — ${formatoPrecio(sub)}` : ''}`;
       })].join('\n'));
 
     const fecha = datos.get('fecha')
@@ -331,16 +348,20 @@
       : 'Mi casa';
 
     return [
-      'Hola MUCHO, quiero hacer este pedido. ¿Me pasan precio y disponibilidad?',
+      'Hola MUCHO, quiero hacer este pedido:',
       '',
       bloques.join('\n\n'),
       '',
+      totalPedido() !== null ? `*Total estimado: ${formatoPrecio(totalPedido())}*` : null,
+      totalPedido() !== null ? '' : null,
       `Entrega: ${entrega}`,
       fecha ? `${horasAnticipacion() ? 'Fecha de retiro' : 'Fecha preferida'}: ${fecha}` : null,
       `Es para: ${para}`,
       `Nombre: ${datos.get('nombre')}`,
       `Teléfono: ${datos.get('telefono')}`,
-      datos.get('comentarios') ? `Comentarios: ${datos.get('comentarios')}` : null
+      datos.get('comentarios') ? `Comentarios: ${datos.get('comentarios')}` : null,
+      '',
+      '¿Me confirman disponibilidad y el total?'
     ].filter((linea) => linea !== null).join('\n');
   }
 

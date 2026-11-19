@@ -6,7 +6,7 @@
 
 (function () {
   const { secciones, productos } = MUCHO.tienda;
-  const { formatoPeso, textoPrecio, escapar } = window.PedidoTexto;
+  const { formatoPeso, textoPrecio, precioUnitario, tienePrecio, escapar } = window.PedidoTexto;
   const $tabs = document.getElementById('tienda-tabs');
   const $paneles = document.getElementById('tienda-paneles');
   const $ficha = document.getElementById('ficha-producto');
@@ -43,7 +43,7 @@
           ${p.ejemplo ? '<p class="producto-card__ejemplo">Nombre provisorio</p>' : ''}
           ${p.fotoProvisoria ? '<p class="producto-card__ejemplo">Foto provisoria</p>' : ''}
           <div class="plato-card__pie">
-            <span class="producto-card__precio ${typeof p.precio === 'number' ? 'precio' : ''}">${textoPrecio(p)}</span>
+            <span class="producto-card__precio ${tienePrecio(p) ? 'precio' : ''}">${textoPrecio(p)}</span>
             <div class="producto-card__accion" data-accion="${p.id}"></div>
           </div>
         </div>
@@ -121,7 +121,7 @@
         <h2 class="ficha__nombre" id="ficha-producto-titulo">${escapar(p.nombre)}</h2>
         <p class="producto-card__contenido">${escapar(p.contenido)}</p>
         <p class="ficha__desc">${escapar(p.descripcion)}</p>
-        <p class="ficha-producto__precio ${typeof p.precio === 'number' ? 'precio' : ''}">${textoPrecio(p)}</p>
+        <p class="ficha-producto__precio ${tienePrecio(p) ? 'precio' : ''}" data-precio-ficha>${textoPrecio(p)}</p>
         ${p.ejemplo ? '<p class="producto-card__ejemplo">Nombre, descripción y tamaños provisorios</p>' : ''}
         ${pesos.length > 1 ? `<fieldset class="ficha-producto__grupo">
             <legend>Tamaño</legend>
@@ -140,7 +140,7 @@
               <button type="button" data-paso="1" aria-label="Sumar uno">+</button>
             </div>
           </div>
-          <button type="submit" class="btn btn--primario btn--ancho">Agregar al pedido</button>
+          <button type="submit" class="btn btn--primario btn--ancho">Agregar al pedido<span data-total-ficha></span></button>
         </div>
       </form>`;
 
@@ -152,7 +152,19 @@
       if (b) $cantidad.value = Math.max(1, Math.min(999, leerCantidad() + Number(b.dataset.paso)));
     });
     // Si escriben algo fuera de rango, se corrige al salir del campo
-    $cantidad.addEventListener('change', () => { $cantidad.value = leerCantidad(); });
+    $cantidad.addEventListener('change', () => { $cantidad.value = leerCantidad(); actualizarPrecio(); });
+    // Precio del tamaño elegido y total según la cantidad
+    function actualizarPrecio() {
+      const peso = p.venta === 'peso' ? Number(new FormData($form).get('peso') || p.pesos[0]) : null;
+      const unitario = precioUnitario(p, peso);
+      if (unitario === null) return;
+      if (p.preciosPorPeso) $form.querySelector('[data-precio-ficha]').textContent = `${formatoPrecio(unitario)} la bolsa de ${formatoPeso(peso)}`;
+      $form.querySelector('[data-total-ficha]').textContent = ` · ${formatoPrecio(unitario * leerCantidad())}`;
+    }
+    $form.addEventListener('change', actualizarPrecio);
+    $form.addEventListener('input', actualizarPrecio);
+    $form.addEventListener('click', (e) => { if (e.target.closest('[data-paso]')) actualizarPrecio(); });
+    actualizarPrecio();
     $form.addEventListener('submit', (e) => {
       e.preventDefault();
       const datos = new FormData($form);
