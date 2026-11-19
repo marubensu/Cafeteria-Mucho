@@ -481,35 +481,108 @@
      PASO 3 · CONFIRMACIÓN
      ====================================================================== */
   function iniciarConfirmacion() {
-    pintarPasos(2);
+    // El flujo terminó: los tres pasos quedan completos
+    pintarPasos(3);
     const p = leerSesion(CLAVE_ULTIMO, null);
     const $c = $('#confirmacion');
     if (!p) {
-      $c.innerHTML = `<h1 class="confirmacion__titulo">No hay un pedido reciente</h1>
+      $c.innerHTML = `<h1 class="confirmacion__titulo" tabindex="-1">No hay un pedido reciente</h1>
         <p class="confirmacion__texto">Armá tu pedido en la tienda y pagalo en un par de pasos.</p>
         <div class="confirmacion__acciones"><a class="btn btn--primario" href="tienda.html">Ir a la tienda</a></div>`;
       return;
     }
-    const fechaTexto = p.fecha ? new Date(p.fecha + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
+
+    const retiro = p.modo !== 'envio';
     const efectivo = p.medioPago === 'efectivo';
-    const llegada = p.modo === 'envio'
-      ? `Te lo llevamos a ${p.direccion}${fechaTexto ? ` el ${fechaTexto}` : ` en ${config.envio.detalle.split('·').pop().trim()}`}.`
-      : `Retiralo en ${local.direccion}, ${local.barrio}${fechaTexto ? ` el ${fechaTexto}` : ` (${config.retiro.detalle.split('·')[1].trim()})`}.`;
+    // "sábado 21 de noviembre" (sin la coma que agrega toLocaleDateString)
+    const fechaLarga = (iso) => {
+      const d = new Date(iso + 'T12:00:00');
+      const dia = d.toLocaleDateString('es-AR', { weekday: 'long' });
+      const mes = d.toLocaleDateString('es-AR', { month: 'long' });
+      return `${dia} ${d.getDate()} de ${mes}`;
+    };
+    const mayuscula = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+    const horarioDe = (fecha) => { const [abre, cierra] = local.horarios[fecha.getDay()]; return `de ${abre} a ${cierra} h`; };
+
+    const ICONOS = {
+      cuando: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+      donde: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>',
+      pago: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg>',
+      ok: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+      reloj: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 2"/></svg>'
+    };
+
+    // Cuándo
+    let cuando, cuandoDetalle;
+    if (p.fecha) {
+      const fecha = new Date(p.fecha + 'T12:00:00');
+      cuando = mayuscula(fechaLarga(p.fecha));
+      cuandoDetalle = retiro ? `Podés retirarlo ${horarioDe(fecha)}` : 'Fecha de entrega elegida';
+    } else if (retiro) {
+      cuando = 'Listo en 2 h';
+      cuandoDetalle = `Hoy el local abre ${horarioDe(new Date())}`;
+    } else {
+      cuando = mayuscula(config.envio.detalle.split('·').pop().trim());
+      cuandoDetalle = 'Entrega estimada';
+    }
+    // Dónde
+    const donde = retiro ? `${local.direccion}, ${local.barrio.replace(', CABA', '')}` : p.direccion;
+    const dondeDetalle = retiro
+      ? `<a href="${local.mapsUrl}" target="_blank" rel="noopener">Cómo llegar</a>`
+      : 'Envío a domicilio';
+    // Pago: el estado va con ícono y etiqueta, no solo con color
+    const medio = { tarjeta: 'con tarjeta', mp: 'con Mercado Pago', efectivo: 'en efectivo' }[p.medioPago] || '';
+    const pago = efectivo ? `Pagás ${formatoPrecio(p.total)} en efectivo al retirar` : `Pagaste ${formatoPrecio(p.total)} ${medio}`;
+    const etiquetaPago = efectivo
+      ? `<span class="estado-pago estado-pago--pendiente">${ICONOS.reloj}Pago pendiente</span>`
+      : `<span class="estado-pago estado-pago--ok">${ICONOS.ok}Pagado</span>`;
+
     const consulta = encodeURIComponent(`Hola MUCHO, tengo una consulta sobre mi pedido ${p.numero}.`);
+    const subtotal = typeof p.subtotal === 'number' ? p.subtotal : p.total - (p.envio || 0);
+
     $c.innerHTML = `
-      <div class="confirmacion__tilde" aria-hidden="true">✓</div>
-      <h1 class="confirmacion__titulo">${efectivo ? '¡Recibimos tu pedido!' : '¡Tu compra fue exitosa!'}</h1>
-      <p class="confirmacion__llegada">${escapar(llegada)}${efectivo ? ' Lo pagás al retirar.' : ''}</p>
-      <p class="confirmacion__numero">Pedido ${escapar(p.numero)} · ${formatoPrecio(p.total)}</p>
-      <p class="confirmacion__texto">Te mandamos el detalle a <strong>${escapar(p.email)}</strong>.</p>
-      <ul class="checkout-resumen confirmacion__items">${p.items.map((it) => `<li><span>${escapar(it.nombre)} <em>${escapar(it.detalle)}</em></span><span>${formatoPrecio(it.subtotal)}</span></li>`).join('')}
-        ${p.envio ? `<li><span>Envío</span><span>${formatoPrecio(p.envio)}</span></li>` : ''}
+      <p class="solo-impresion confirmacion__impreso">MUCHO · Comprobante de pedido</p>
+      <div class="confirmacion__encabezado">
+        <div class="confirmacion__tilde" aria-hidden="true">✓</div>
+        <h1 class="confirmacion__titulo" tabindex="-1">${efectivo ? '¡Recibimos tu pedido!' : '¡Tu compra fue exitosa!'}</h1>
+      </div>
+
+      <div class="confirmacion__numero">
+        <span class="confirmacion__numero-titulo">Tu número de pedido</span>
+        <strong>${escapar(p.numero)}</strong>
+        <span class="confirmacion__numero-ayuda">${retiro ? 'Mostralo al retirar' : 'Tenelo a mano si nos escribís'}</span>
+      </div>
+
+      <ul class="confirmacion__datos">
+        <li>${ICONOS.cuando}<div><strong>${escapar(cuando)}</strong><span>${escapar(cuandoDetalle)}</span></div></li>
+        <li>${ICONOS.donde}<div><strong>${escapar(donde)}</strong><span>${dondeDetalle}</span></div></li>
+        <li>${ICONOS.pago}<div><strong>${escapar(pago)}</strong><span>${etiquetaPago}</span></div></li>
       </ul>
+
+      <div class="confirmacion__detalle">
+        <h2 class="confirmacion__detalle-titulo">Detalle</h2>
+        <ul class="checkout-resumen">${p.items.map((it) => `<li><span>${escapar(it.nombre)} <em>${escapar(it.detalle)}</em></span><span>${formatoPrecio(it.subtotal)}</span></li>`).join('')}</ul>
+        <div class="checkout-lineas">
+          <div class="checkout-fila"><span>Subtotal</span><span>${formatoPrecio(subtotal)}</span></div>
+          <div class="checkout-fila"><span>${retiro ? 'Retiro en el local' : 'Envío a domicilio'}</span><span>${p.envio ? formatoPrecio(p.envio) : 'Sin costo'}</span></div>
+        </div>
+        <div class="checkout-total"><span>Total</span><strong>${formatoPrecio(p.total)}</strong></div>
+      </div>
+
       <div class="confirmacion__acciones">
-        <a class="btn btn--primario" href="index.html">Volver al inicio</a>
+        ${retiro ? `<a class="btn btn--primario" href="${local.mapsUrl}" target="_blank" rel="noopener">Cómo llegar</a>` : ''}
         <a class="btn" href="tienda.html">Seguir comprando</a>
       </div>
+      <p class="confirmacion__enlaces">
+        <button type="button" class="checkout-boton-texto" data-imprimir>Descargar comprobante</button>
+        <span aria-hidden="true">·</span>
+        <a href="index.html">Volver al inicio</a>
+      </p>
       <p class="confirmacion__ayuda">¿Dudas con tu pedido? <a href="https://wa.me/${MUCHO.tienda.whatsapp}?text=${consulta}" target="_blank" rel="noopener">Escribinos por WhatsApp</a></p>`;
+
+    $c.querySelector('[data-imprimir]').addEventListener('click', () => window.print());
+    // Lectores de pantalla: anuncian primero la confirmación
+    $c.querySelector('.confirmacion__titulo').focus({ preventScroll: true });
   }
 
   if (paso === 'carrito') iniciarCarrito();
