@@ -569,18 +569,23 @@ body.fondo-scroll[data-fondo="cafe"] .video-cocina__texto .eyebrow { color: var(
 .perro-animado { position: relative; width: 200px; }
 .perro-animado img { display: block; width: 100%; height: auto; }
 .perro-animado__cola { position: absolute; inset: 0; transform-origin: 65.97% 86.63%; }
-.perro-animado.menea .perro-animado__cola { animation: menear-cola 2.2s ease-in-out; }
+.perro-animado.menea .perro-animado__cola { animation: menear-cola 1.6s ease-in-out; }
+/* Meneo rápido (~0,11 s por vaivén) que se va calmando hasta quedar en la pose original */
 @keyframes menear-cola {
   0%   { transform: rotate(0deg); }
-  10%  { transform: rotate(-16deg); }
-  20%  { transform: rotate(6deg); }
-  30%  { transform: rotate(-16deg); }
-  40%  { transform: rotate(6deg); }
-  50%  { transform: rotate(-14deg); }
-  60%  { transform: rotate(5deg); }
-  70%  { transform: rotate(-10deg); }
-  80%  { transform: rotate(3deg); }
-  90%  { transform: rotate(-4deg); }
+  7%   { transform: rotate(-16deg); }
+  14%  { transform: rotate(6deg); }
+  21%  { transform: rotate(-16deg); }
+  28%  { transform: rotate(6deg); }
+  35%  { transform: rotate(-16deg); }
+  42%  { transform: rotate(6deg); }
+  49%  { transform: rotate(-15deg); }
+  56%  { transform: rotate(5deg); }
+  63%  { transform: rotate(-13deg); }
+  70%  { transform: rotate(4deg); }
+  77%  { transform: rotate(-9deg); }
+  84%  { transform: rotate(3deg); }
+  92%  { transform: rotate(-4deg); }
   100% { transform: rotate(0deg); }
 }
 @media (prefers-reduced-motion: reduce) { .perro-animado.menea .perro-animado__cola { animation: none; } }
