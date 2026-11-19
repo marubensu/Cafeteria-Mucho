@@ -87,7 +87,7 @@ const MUCHO = {
     { id: 'mont-blanc', nombre: 'Mont blanc', descripcion: 'Cold brew con crema de naranja.', precio: 6200, categoria: 'cafeteria', momentos: ['todo'], dietas: ['sin-gluten'], estado: 'nuevo', foto: 'assets/img/carta/mont-blanc.jpg' },
 
     // Bebidas
-    { id: 'matcha-latte', nombre: 'Matcha latte', descripcion: 'Matcha ceremonial importado de Japón, batido a mano, con leche a elección.', precio: 6200, categoria: 'bebidas', momentos: ['todo'], dietas: ['sin-gluten'], foto: 'assets/img/carta/matcha-latte.jpg' },
+    { id: 'strawberry-matcha', nombre: 'Strawberry matcha', descripcion: 'Matcha ceremonial con leche sobre puré de frutillas, coronado con espuma de frutilla. Con hielo.', precio: 6200, categoria: 'bebidas', momentos: ['todo'], dietas: ['sin-gluten'], foto: 'assets/img/carta/strawberry-matcha.jpg', fotoPosicion: 'center 70%' },
     { id: 'limo-blueberry', nombre: 'Limo blueberry', descripcion: 'Limonada con arándanos, con hielo.', precio: 5200, categoria: 'bebidas', momentos: ['todo'], dietas: ['vegano', 'sin-gluten'], foto: 'assets/img/carta/limo-blueberry.jpg', fotoZoom: 1.15 },
     { id: 'licuado-banana-mango', nombre: 'Licuado de banana, mango y naranja', descripcion: 'Fruta natural licuada con jugo de naranja exprimido.', precio: 6400, categoria: 'bebidas', momentos: ['desayuno', 'merienda'], dietas: ['vegano', 'sin-gluten'], foto: 'assets/img/carta/licuado-banana-mango.jpg' },
     { id: 'gin-tonic-frutilla', nombre: 'Gin tonic de frutilla y pepino', descripcion: 'Gin, tónica, frutilla y pepino fresco.', precio: 8900, categoria: 'bebidas', momentos: ['after'], dietas: ['vegano', 'sin-gluten'], foto: 'assets/img/carta/gin-tonic-frutilla.jpg' },
