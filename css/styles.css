@@ -1540,7 +1540,11 @@ html.cargando-pago { overflow: hidden; }
   .header__nav li:last-child { border-bottom: 0; }
   .header__nav a { display: block; padding: 16px 0; font-size: 22px; }
   .header__nav a::after { display: none; }
-  .header__nav a[aria-current='page'] { color: var(--cafe-oscuro); }
+  /* Página actual marcada como en desktop: más oscura y subrayada */
+  .header__nav a[aria-current='page'] {
+    color: var(--tinta);
+    text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; text-decoration-color: var(--tinta);
+  }
 
   /* Títulos */
   .pagina-titulo { padding-top: 48px; padding-bottom: 36px; }
