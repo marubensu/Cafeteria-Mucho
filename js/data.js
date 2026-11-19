@@ -82,7 +82,7 @@ const MUCHO = {
     { id: 'espresso', nombre: 'Espresso', descripcion: 'Doble, de nuestro blend de la semana.', precio: 3200, categoria: 'cafeteria', momentos: ['todo'], dietas: ['vegano', 'sin-gluten'], foto: 'assets/img/carta/espresso.jpg' },
     { id: 'flat-white', nombre: 'Flat white', descripcion: 'Espresso doble y leche texturizada, con latte art.', precio: 4800, categoria: 'cafeteria', momentos: ['todo'], dietas: ['sin-gluten'], foto: 'assets/img/carta/flat-white.jpg' },
     { id: 'cafe-con-leche', nombre: 'Café con leche', descripcion: 'En taza grande, con latte art. Pedilo con leche vegetal si querés.', precio: 4600, categoria: 'cafeteria', momentos: ['desayuno', 'merienda'], dietas: ['sin-gluten'], foto: 'assets/img/carta/cafe-con-leche.jpg', fotoPosicion: 'center 30%' },
-    { id: 'v60', nombre: 'Filtrado en V60', descripcion: 'Filtrado en V60 o Chemex, para una o dos tazas. Preguntá qué origen tenemos hoy.', precio: 5200, categoria: 'cafeteria', momentos: ['todo'], dietas: ['vegano', 'sin-gluten'], foto: 'assets/img/carta/filtrado-v60-menu.jpg', fotoPosicion: 'center 45%' },
+    { id: 'v60', nombre: 'Filtrado en V60', descripcion: 'Filtrado en V60 o Chemex, para una o dos tazas. Preguntá qué origen tenemos hoy.', precio: 5200, categoria: 'cafeteria', momentos: ['todo'], dietas: ['vegano', 'sin-gluten'], foto: 'assets/img/carta/filtrado-v60-menu.jpg', fotoPosicion: 'center 22%' },
     { id: 'espresso-tonic', nombre: 'Espresso tonic de frutilla', descripcion: 'Espresso sobre tónica y almíbar de frutilla, con hielo.', precio: 5900, categoria: 'cafeteria', momentos: ['todo'], dietas: ['vegano', 'sin-gluten'], estado: 'destacado', foto: 'assets/img/carta/espresso-tonic-frutilla.jpg' },
     { id: 'mont-blanc', nombre: 'Mont blanc', descripcion: 'Cold brew con crema de naranja.', precio: 6200, categoria: 'cafeteria', momentos: ['todo'], dietas: ['sin-gluten'], estado: 'nuevo', foto: 'assets/img/carta/mont-blanc.jpg' },
 
@@ -225,7 +225,7 @@ function etiquetasDieta(dietas) {
 
 // Foto del ítem o, si todavía no hay, un espacio reservado con su nombre
 // Subí este número cada vez que se reemplace o edite una foto, para que el navegador no muestre la vieja
-const VERSION_FOTOS = 11;
+const VERSION_FOTOS = 12;
 
 function fotoHTML(foto, alt, clase = '', posicion = '', zoom = 1) {
   const reglas = [];
