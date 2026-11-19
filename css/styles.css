@@ -1468,6 +1468,8 @@ html.cargando-pago { overflow: hidden; }
 .confirmacion__detalle { display: grid; gap: 12px; padding: 18px 20px; border-radius: var(--radio-card); background: var(--blanco); border: 1px solid var(--linea); }
 .confirmacion__detalle-titulo { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cafe-oscuro); }
 .confirmacion__detalle .checkout-total strong { font-size: 24px; }
+.confirmacion__detalle-contenido { display: grid; gap: 12px; }
+.confirmacion__detalle-boton { display: none; }
 
 .confirmacion__acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .confirmacion__enlaces { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin-top: -14px !important; font-size: 15px; color: var(--tinta-suave); }
@@ -1906,6 +1908,20 @@ html.cargando-pago { overflow: hidden; }
   .confirmacion__datos { padding: 2px 16px; }
   .confirmacion__datos strong { font-size: 18px; }
   .confirmacion__acciones .btn { flex: 1 1 100%; }
+  /* Detalle colapsado: solo el encabezado con la flecha; al tocarlo se despliega */
+  .confirmacion__detalle { gap: 0; padding: 0; }
+  .confirmacion__detalle > .confirmacion__detalle-titulo { display: none; }
+  .confirmacion__detalle-boton {
+    display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px; width: 100%;
+    padding: 16px 18px; border: 0; background: none; color: var(--tinta); text-align: left; cursor: pointer;
+    border-radius: var(--radio-card);
+  }
+  .confirmacion__detalle-boton:focus-visible { outline: 2px solid var(--cafe); outline-offset: 2px; }
+  .confirmacion__detalle-resumen { font-family: var(--fuente-titulos); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .confirmacion__detalle-flecha { width: 22px; height: 22px; color: var(--cafe-oscuro); transition: transform 200ms ease; }
+  .confirmacion__detalle.abierto .confirmacion__detalle-flecha { transform: rotate(180deg); }
+  .confirmacion__detalle-contenido { display: none; padding: 0 18px 18px; }
+  .confirmacion__detalle.abierto .confirmacion__detalle-contenido { display: grid; animation: aparecer 180ms ease-out; }
   /* Pago: el botón de pagar queda fijo abajo de la pantalla */
   .pagina-checkout[data-checkout="pago"] .checkout-panel .checkout-cta { display: none; }
   .pago-barra-movil {
@@ -1927,6 +1943,10 @@ html.cargando-pago { overflow: hidden; }
   /* Comprobante de pedido (confirmacion.html) */
   main > #confirmacion.confirmacion { display: grid !important; gap: 6mm; margin: 0; max-width: none; }
   .confirmacion__tilde, .confirmacion__acciones, .confirmacion__enlaces, .confirmacion__ayuda { display: none !important; }
+  /* El comprobante impreso siempre muestra el detalle completo */
+  .confirmacion__detalle-boton { display: none !important; }
+  .confirmacion__detalle-contenido { display: grid !important; padding: 0 !important; }
+  .confirmacion__detalle > .confirmacion__detalle-titulo { display: block !important; }
   .confirmacion__titulo { font-size: 20pt; }
   .confirmacion__numero, .confirmacion__datos, .confirmacion__detalle { break-inside: avoid; border: 0.5pt solid #999; }
   .impreso__cabecera { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 8mm; margin-bottom: 6mm; border-bottom: 1.5pt solid var(--tinta); }

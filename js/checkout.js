@@ -691,12 +691,20 @@
 
       <div class="confirmacion__detalle">
         <h2 class="confirmacion__detalle-titulo">Detalle</h2>
-        <ul class="checkout-resumen">${p.items.map((it) => `<li><span>${escapar(it.nombre)} <em>${escapar(it.detalle)}</em></span><span>${formatoPrecio(it.subtotal)}</span></li>`).join('')}</ul>
-        <div class="checkout-lineas">
-          <div class="checkout-fila"><span>Subtotal</span><span>${formatoPrecio(subtotal)}</span></div>
-          <div class="checkout-fila"><span>${retiro ? 'Retiro en el local' : 'Envío a domicilio'}</span><span>${p.envio ? formatoPrecio(p.envio) : 'Sin costo'}</span></div>
+        <!-- Mobile: el detalle arranca colapsado y se abre con este botón -->
+        <button type="button" class="confirmacion__detalle-boton" aria-expanded="false" aria-controls="confirmacion-detalle-contenido">
+          <span class="confirmacion__detalle-titulo">Detalle</span>
+          <span class="confirmacion__detalle-resumen">${p.items.length === 1 ? '1 producto' : `${p.items.length} productos`} · ${formatoPrecio(p.total)}</span>
+          <svg class="confirmacion__detalle-flecha" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+        </button>
+        <div class="confirmacion__detalle-contenido" id="confirmacion-detalle-contenido">
+          <ul class="checkout-resumen">${p.items.map((it) => `<li><span>${escapar(it.nombre)} <em>${escapar(it.detalle)}</em></span><span>${formatoPrecio(it.subtotal)}</span></li>`).join('')}</ul>
+          <div class="checkout-lineas">
+            <div class="checkout-fila"><span>Subtotal</span><span>${formatoPrecio(subtotal)}</span></div>
+            <div class="checkout-fila"><span>${retiro ? 'Retiro en el local' : 'Envío a domicilio'}</span><span>${p.envio ? formatoPrecio(p.envio) : 'Sin costo'}</span></div>
+          </div>
+          <div class="checkout-total"><span>Total</span><strong>${formatoPrecio(p.total)}</strong></div>
         </div>
-        <div class="checkout-total"><span>Total</span><strong>${formatoPrecio(p.total)}</strong></div>
       </div>
 
       <div class="confirmacion__acciones">
@@ -711,6 +719,12 @@
       <p class="confirmacion__ayuda">¿Dudas con tu pedido? <a href="https://wa.me/${MUCHO.tienda.whatsapp}?text=${consulta}" target="_blank" rel="noopener">Escribinos por WhatsApp</a></p>`;
 
     $c.querySelector('[data-imprimir]').addEventListener('click', () => window.print());
+    const $botonDetalle = $c.querySelector('.confirmacion__detalle-boton');
+    $botonDetalle.addEventListener('click', () => {
+      const abierto = $botonDetalle.getAttribute('aria-expanded') !== 'true';
+      $botonDetalle.setAttribute('aria-expanded', String(abierto));
+      $c.querySelector('.confirmacion__detalle').classList.toggle('abierto', abierto);
+    });
     // Lectores de pantalla: anuncian primero la confirmación
     $c.querySelector('.confirmacion__titulo').focus({ preventScroll: true });
   }
