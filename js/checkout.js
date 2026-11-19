@@ -242,10 +242,12 @@
     $error.textContent = mensaje;
     $error.hidden = !mensaje;
     $campo.classList.toggle('campo--error', !!mensaje);
-    input.setAttribute('aria-invalid', String(!!mensaje));
-    const descritos = new Set((input.getAttribute('aria-describedby') || '').split(' ').filter(Boolean));
+    // En el selector de fecha el valor va en un campo oculto: el aviso lo lleva el botón visible
+    const destino = input.type === 'hidden' ? ($campo.querySelector('button') || input) : input;
+    destino.setAttribute('aria-invalid', String(!!mensaje));
+    const descritos = new Set((destino.getAttribute('aria-describedby') || '').split(' ').filter(Boolean));
     if (mensaje) descritos.add($error.id); else descritos.delete($error.id);
-    if (descritos.size) input.setAttribute('aria-describedby', [...descritos].join(' ')); else input.removeAttribute('aria-describedby');
+    if (descritos.size) destino.setAttribute('aria-describedby', [...descritos].join(' ')); else destino.removeAttribute('aria-describedby');
   }
 
   function validarCampo(form, esquema, nombre) {
@@ -308,6 +310,133 @@
         <input id="pago-${nombre}" name="${nombre}" type="${tipo}" value="${escapar(valor || '')}" placeholder="${escapar(ayuda)}" ${atributos}>
       </div>`;
 
+    /* ---------- Selector de fecha propio (el nativo del navegador no se puede estilizar) ---------- */
+    const ICONO_CALENDARIO = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
+    const DIAS_CORTOS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+    const DIAS_LARGOS = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+    const MESES_VISIBLES = 3; // se puede elegir hasta 3 meses hacia adelante
+    let mesVisto = null;      // primer día del mes que muestra el calendario
+    const isoDe = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const fechaDe = (iso) => new Date(iso + 'T12:00:00');
+    const mayusculaInicial = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+    const textoFechaBoton = (iso) => mayusculaInicial(fechaDe(iso).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', ''));
+
+    function campoFecha(etiqueta, opcional) {
+      const valor = estado.fecha && estado.fecha >= fechaMinima() ? estado.fecha : '';
+      if (valor !== (estado.fecha || '')) actualizar({ fecha: valor });
+      return `<div class="campo campo-fecha" data-opcional="${opcional}">
+        <label for="pago-fecha-boton">${etiqueta}${opcional ? ' <span class="campo__opcional">(opcional)</span>' : ''}</label>
+        <input type="hidden" name="fecha" id="pago-fecha" value="${valor}">
+        <button type="button" class="selector-fecha__boton ${valor ? '' : 'vacio'}" id="pago-fecha-boton" aria-haspopup="dialog" aria-expanded="false" aria-controls="pago-fecha-panel">
+          <span data-fecha-texto>${valor ? textoFechaBoton(valor) : 'Elegí un día'}</span>${ICONO_CALENDARIO}
+        </button>
+        <div class="selector-fecha__panel" id="pago-fecha-panel" role="dialog" aria-label="Elegí el día" hidden></div>
+      </div>`;
+    }
+
+    function pintarCalendario($panel) {
+      const min = fechaDe(fechaMinima());
+      const primerMes = new Date(min.getFullYear(), min.getMonth(), 1);
+      const ultimoMes = new Date(primerMes.getFullYear(), primerMes.getMonth() + MESES_VISIBLES - 1, 1);
+      if (!mesVisto) mesVisto = estado.fecha ? new Date(fechaDe(estado.fecha).getFullYear(), fechaDe(estado.fecha).getMonth(), 1) : primerMes;
+      if (mesVisto < primerMes) mesVisto = primerMes;
+      if (mesVisto > ultimoMes) mesVisto = ultimoMes;
+      const maxISO = isoDe(new Date(ultimoMes.getFullYear(), ultimoMes.getMonth() + 1, 0));
+      const hoyISO = isoDe(new Date());
+      const anio = mesVisto.getFullYear(); const mes = mesVisto.getMonth();
+      const desfase = (new Date(anio, mes, 1).getDay() + 6) % 7; // lunes primero
+      const diasMes = new Date(anio, mes + 1, 0).getDate();
+      const celdas = [];
+      for (let i = 0; i < desfase; i++) celdas.push('<span class="selector-fecha__vacio"></span>');
+      for (let d = 1; d <= diasMes; d++) {
+        const fecha = new Date(anio, mes, d); const iso = isoDe(fecha);
+        const deshabilitado = iso < fechaMinima() || iso > maxISO;
+        const elegido = iso === estado.fecha;
+        const etiqueta = `${DIAS_LARGOS[(fecha.getDay() + 6) % 7]} ${d} de ${fecha.toLocaleDateString('es-AR', { month: 'long' })}${deshabilitado ? ', no disponible' : ''}`;
+        celdas.push(`<button type="button" class="selector-fecha__dia ${elegido ? 'elegido' : ''} ${iso === hoyISO ? 'hoy' : ''}" data-dia="${iso}" ${deshabilitado ? 'disabled' : ''} aria-pressed="${elegido}" aria-label="${etiqueta}" tabindex="-1">${d}</button>`);
+      }
+      const nombreMes = mayusculaInicial(mesVisto.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }).replace(' de ', ' '));
+      const opcional = $panel.closest('.campo-fecha').dataset.opcional === 'true';
+      $panel.innerHTML = `
+        <div class="selector-fecha__cabecera">
+          <button type="button" class="selector-fecha__nav" data-mes="-1" aria-label="Mes anterior" ${mesVisto <= primerMes ? 'disabled' : ''}>‹</button>
+          <p class="selector-fecha__mes" aria-live="polite">${nombreMes}</p>
+          <button type="button" class="selector-fecha__nav" data-mes="1" aria-label="Mes siguiente" ${mesVisto >= ultimoMes ? 'disabled' : ''}>›</button>
+        </div>
+        <div class="selector-fecha__semana" aria-hidden="true">${DIAS_CORTOS.map((d) => `<span>${d}</span>`).join('')}</div>
+        <div class="selector-fecha__grilla">${celdas.join('')}</div>
+        <div class="selector-fecha__pie">
+          ${opcional && estado.fecha ? '<button type="button" class="selector-fecha__texto" data-borrar>Borrar</button>' : '<span></span>'}
+          <button type="button" class="selector-fecha__texto" data-cerrar-fecha>Listo</button>
+        </div>`;
+      // Un solo día enfocable con Tab: el elegido, o el primero disponible
+      const enfocable = $panel.querySelector('.selector-fecha__dia.elegido:not(:disabled)') || $panel.querySelector('.selector-fecha__dia:not(:disabled)');
+      if (enfocable) enfocable.tabIndex = 0;
+    }
+
+    function abrirCalendario(enfocar = true) {
+      const $panel = $('#pago-fecha-panel'); if (!$panel) return;
+      pintarCalendario($panel);
+      $panel.hidden = false;
+      $('#pago-fecha-boton').setAttribute('aria-expanded', 'true');
+      if (enfocar) $panel.querySelector('.selector-fecha__dia[tabindex="0"]')?.focus({ preventScroll: true });
+      // Que el calendario entre completo en pantalla (en mobile, sin quedar debajo del botón fijo de pagar)
+      $panel.scrollIntoView({ block: 'nearest', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
+    function cerrarCalendario(devolverFoco = true) {
+      const $panel = $('#pago-fecha-panel'); if (!$panel || $panel.hidden) return;
+      $panel.hidden = true;
+      $('#pago-fecha-boton').setAttribute('aria-expanded', 'false');
+      if (devolverFoco) $('#pago-fecha-boton').focus();
+    }
+    function elegirFecha(iso) {
+      actualizar({ fecha: iso });
+      form.elements.fecha.value = iso;
+      const $boton = $('#pago-fecha-boton');
+      $boton.querySelector('[data-fecha-texto]').textContent = iso ? textoFechaBoton(iso) : 'Elegí un día';
+      $boton.classList.toggle('vacio', !iso);
+      tocados.add('fecha');
+      validarCampo(form, esquema(), 'fecha');
+    }
+
+    form.addEventListener('click', (ev) => {
+      if (ev.target.closest('#pago-fecha-boton')) {
+        $('#pago-fecha-panel').hidden ? abrirCalendario() : cerrarCalendario();
+        return;
+      }
+      const $panel = ev.target.closest('#pago-fecha-panel'); if (!$panel) return;
+      const nav = ev.target.closest('[data-mes]');
+      if (nav) { mesVisto = new Date(mesVisto.getFullYear(), mesVisto.getMonth() + Number(nav.dataset.mes), 1); pintarCalendario($panel); $panel.querySelector(`[data-mes="${nav.dataset.mes}"]:not(:disabled)`)?.focus() || $panel.querySelector('.selector-fecha__dia[tabindex="0"]')?.focus(); return; }
+      const dia = ev.target.closest('[data-dia]');
+      if (dia && !dia.disabled) { elegirFecha(dia.dataset.dia); cerrarCalendario(); return; }
+      if (ev.target.closest('[data-borrar]')) { elegirFecha(''); cerrarCalendario(); return; }
+      if (ev.target.closest('[data-cerrar-fecha]')) cerrarCalendario();
+    });
+    // Teclado: flechas entre días, Inicio/Fin de semana, Re Pág/Av Pág cambian de mes, Escape cierra
+    form.addEventListener('keydown', (ev) => {
+      const $panel = ev.target.closest && ev.target.closest('#pago-fecha-panel');
+      if (!$panel) return;
+      if (ev.key === 'Escape') { ev.preventDefault(); cerrarCalendario(); return; }
+      const $dia = ev.target.closest('[data-dia]'); if (!$dia) return;
+      const saltos = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+      let destino = null;
+      const actual = fechaDe($dia.dataset.dia);
+      if (ev.key in saltos) destino = new Date(actual.getFullYear(), actual.getMonth(), actual.getDate() + saltos[ev.key]);
+      if (ev.key === 'Home') destino = new Date(actual.getFullYear(), actual.getMonth(), actual.getDate() - ((actual.getDay() + 6) % 7));
+      if (ev.key === 'End') destino = new Date(actual.getFullYear(), actual.getMonth(), actual.getDate() + (6 - (actual.getDay() + 6) % 7));
+      if (ev.key === 'PageUp' || ev.key === 'PageDown') destino = new Date(actual.getFullYear(), actual.getMonth() + (ev.key === 'PageUp' ? -1 : 1), actual.getDate());
+      if (!destino) return;
+      ev.preventDefault();
+      const iso = isoDe(destino);
+      let $obj = $panel.querySelector(`[data-dia="${iso}"]`);
+      if (!$obj) { mesVisto = new Date(destino.getFullYear(), destino.getMonth(), 1); pintarCalendario($panel); $obj = $panel.querySelector(`[data-dia="${iso}"]`); }
+      if ($obj && !$obj.disabled) { $panel.querySelectorAll('[data-dia]').forEach((b) => { b.tabIndex = -1; }); $obj.tabIndex = 0; $obj.focus(); }
+    });
+    // Clic fuera del calendario lo cierra
+    document.addEventListener('click', (ev) => {
+      if (!ev.target.closest('.campo-fecha')) cerrarCalendario(false);
+    });
+
     function seccionDatos() {
       return `<div class="grilla-form">
         ${campo({ etiqueta: 'Nombre y apellido', nombre: 'nombre', valor: estado.nombre, ayuda: 'Laura Gómez', atributos: 'autocomplete="name" autocapitalize="words" maxlength="60"', clase: 'campo--completo' })}
@@ -320,7 +449,7 @@
 
     function seccionEntrega(r) {
       const fechaCampo = `<div class="grilla-form">
-        ${campo({ etiqueta: r.hayTortas ? 'Fecha de retiro' : (r.modo === 'envio' ? '¿Para cuándo lo querés?' : '¿Cuándo lo retirás?'), nombre: 'fecha', tipo: 'date', valor: estado.fecha, opcional: !r.hayTortas, atributos: `min="${fechaMinima()}"` })}
+        ${campoFecha(r.hayTortas ? 'Fecha de retiro' : (r.modo === 'envio' ? '¿Para cuándo lo querés?' : '¿Cuándo lo retirás?'), !r.hayTortas)}
       </div>
       ${r.hayTortas ? `<p class="checkout-nota">Las tortas por encargo necesitan al menos ${Pedido.anticipacion()} h de anticipación.</p>` : ''}`;
       if (r.modo === 'envio') {
@@ -380,7 +509,7 @@
     function dibujar() {
       const r = resumen();
       if (r.vacio) { location.replace('carrito.html'); return; }
-      const foco = document.activeElement && form.contains(document.activeElement) ? document.activeElement.name : null;
+      const foco = document.activeElement && form.contains(document.activeElement) ? (document.activeElement.name || document.activeElement.id) : null;
       $('#pago-datos').innerHTML = seccionDatos();
       $('#pago-entrega').innerHTML = seccionEntrega(r);
       $('#pago-medio').innerHTML = seccionMedio(r);
@@ -389,7 +518,8 @@
       // Vuelve a mostrar los errores de los campos ya tocados
       const e = esquema();
       tocados.forEach((n) => { if (form.elements[n]) validarCampo(form, e, n); });
-      if (foco && form.elements[foco]) form.elements[foco].focus();
+      if (foco && form.elements[foco] && form.elements[foco].type !== 'hidden') form.elements[foco].focus();
+      else if (foco === 'pago-fecha-boton') $('#pago-fecha-boton')?.focus();
     }
 
     const MASCARA_DE = { tarjetaNumero: mascaras.tarjeta, tarjetaVencimiento: mascaras.vencimiento, tarjetaCodigo: mascaras.codigo, telefono: mascaras.telefono, cp: mascaras.cp };
@@ -449,7 +579,7 @@
         tocados.add(nombre);
         if (validarCampo(form, e, nombre) && !primero) primero = form.elements[nombre];
       });
-      if (primero) { primero.focus(); aviso('Revisá los campos marcados en rojo.'); return; }
+      if (primero) { (primero.type === 'hidden' ? $('#pago-fecha-boton') : primero).focus(); aviso('Revisá los campos marcados en rojo.'); return; }
 
       const r = resumen();
       const pedido = {
