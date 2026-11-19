@@ -1685,7 +1685,7 @@ html.cargando-pago { overflow: hidden; }
   /* Menú */
   .filtros { padding: 18px; }
   /* Filtros: solo un botón con ícono junto al título; al tocarlo se abren en un modal desde abajo */
-  .pagina-menu .carta__cabecera { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+  .pagina-menu .carta__cabecera { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 8px; }
   .filtros-boton {
     position: relative; display: grid; place-content: center; flex: none;
     width: 48px; height: 48px; padding: 0; border: 0; border-radius: 50%;
