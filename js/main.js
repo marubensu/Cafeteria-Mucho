@@ -202,7 +202,7 @@
       const ancho = lejos ? azar(6, 8) : azar(9, 14);  // % del ancho de la imagen
       const dur = lejos ? azar(6.5, 8.5) : azar(4.2, 6.2);
       grano.style.width = `${ancho}cqw`;
-      grano.style.setProperty('--x0', `${azar(-25, 70)}cqw`);
+      grano.style.setProperty('--x0', `${azar(-4, 70)}cqw`); // empiezan dentro de la foto: no pasan sobre el texto
       grano.style.setProperty('--dx', `${azar(30, 50)}cqw`);
       grano.style.setProperty('--r0', `${azar(-180, 180)}deg`);
       grano.style.setProperty('--r1', `${azar(-180, 180) + (Math.random() < 0.5 ? -1 : 1) * azar(240, 480)}deg`);

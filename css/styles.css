@@ -479,6 +479,12 @@ body.pagina-contacto {
   min-height: 600px;
   background: var(--arena);
 }
+/* El fondo clarito ocupa todo el ancho de la pantalla; texto e imagen siguen alineados al contenedor */
+.hero .hero__grilla {
+  border-radius: 0;
+  box-shadow: 0 0 0 100vmax var(--arena);
+  clip-path: inset(0 -100vmax);
+}
 .hero__texto {
   display: flex; flex-direction: column; justify-content: center;
   padding: 72px 64px 72px 72px;
@@ -512,6 +518,8 @@ body.pagina-contacto {
 
 /* Lluvia de granos: caen en diagonal (arriba-izquierda → abajo-derecha) por detrás del vaso y las manos */
 .hero__imagen { container-type: size; }
+/* Los granos pueden seguir hacia la derecha sobre el fondo; arriba y abajo se recortan */
+.hero__imagen.lluvia-activa { overflow-x: visible; overflow-y: clip; }
 .hero__lluvia { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .hero__imagen.lluvia-activa .hero__granos { display: none; }  /* con animación, los granos quietos se ocultan */
 .grano-cae {
