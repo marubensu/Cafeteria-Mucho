@@ -58,7 +58,7 @@
         </header>
         ${cat.id === 'tostones' ? `<p class="aviso aviso--ejecutivo">${ejecutivo.texto} · ${formatoPrecio(ejecutivo.precio)}</p>` : ''}
         <ul class="grilla-platos">${deCat.map(tarjeta).join('')}</ul>
-        ${cat.id === 'pasteleria' ? '<p class="carta-seccion__extra">¿Una torta entera para un cumpleaños o una reunión? <a href="encargos.html">Mirá las tortas por encargo →</a></p>' : ''}
+        ${cat.id === 'pasteleria' ? '<p class="carta-seccion__extra">¿Una torta entera para un cumpleaños o una reunión? <a href="tienda.html?seccion=tortas">Mirá las tortas por encargo →</a></p>' : ''}
       </section>`;
   }).join('');
 

@@ -170,7 +170,7 @@ const MUCHO = {
     secciones: [
       { id: 'cafe', nombre: 'Café para casa', bajada: 'Nuestro café, en grano o molido para tu método.' },
       { id: 'proveeduria', nombre: 'Proveeduría', bajada: '' },
-      { id: 'tortas', nombre: 'Tortas por encargo', nombreCorto: 'Tortas', bajada: 'Tortas enteras con al menos 48 h de anticipación. Se retiran en el local.' }
+      { id: 'tortas', nombre: 'Tortas por encargo', bajada: 'Tortas enteras con al menos 48 h de anticipación. Se retiran en el local.' }
     ],
     productos: [
       // Café para casa: fotos reales de las bolsas; nombres, descripción y tamaños provisorios [reemplazar por los reales]
