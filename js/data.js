@@ -168,7 +168,7 @@ const MUCHO = {
       cuotas: 3
     },
     secciones: [
-      { id: 'cafe', nombre: 'Café para casa', bajada: 'Nuestro café, en grano o molido para tu método.' },
+      { id: 'cafe', nombre: 'Café para casa', bajada: '' },
       { id: 'proveeduria', nombre: 'Proveeduría', bajada: '' },
       { id: 'tortas', nombre: 'Tortas por encargo', bajada: 'Tortas enteras con al menos 48 h de anticipación. Se retiran en el local.' }
     ],
