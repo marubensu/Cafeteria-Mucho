@@ -660,6 +660,8 @@ html { overflow-x: hidden; }
 body { overflow-x: clip; }
 /* Sin isolation: las figuras quedan en la capa más baja de toda la página, detrás de cards, botones y textos */
 .con-fondo { position: relative; }
+/* El grano junto a la cita de El lugar sale del borde: se recorta para que el celular no achique toda la página */
+main:has(> .fig-fondo--cita) { position: relative; overflow-x: clip; }
 .fig-fondo {
   position: absolute; z-index: -1; pointer-events: none;
   height: auto; aspect-ratio: 1; overflow: visible;
@@ -1763,6 +1765,12 @@ html.cargando-pago { overflow: hidden; }
   .nuestro-cafe { padding: 24px; }
   .nuestro-cafe h2 { font-size: 30px; }
   .metodos { display: flex; overflow-x: auto; gap: 12px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  /* Carruseles horizontales: siguen hasta el borde derecho de la pantalla (sin el margen de la derecha).
+     Al final queda el mismo margen, para que la última tarjeta no quede pegada al borde. */
+  .momentos ul { margin-right: calc(-1 * var(--margen)); padding-right: var(--margen); scroll-padding-left: 0; }
+  .metodos { margin-right: calc(-1 * (24px + 1px + var(--margen))); padding-right: calc(24px + var(--margen)); }
+  .menu-filtros .filtros__anclas ul { margin-right: -20px; padding-right: 20px; }
+  .fig-fondo.fig-fondo--cita { right: -42vw !important; }
   .metodos::-webkit-scrollbar { display: none; }
   .metodo { flex: 0 0 72%; scroll-snap-align: start; }
   .bloque-foto { padding: 22px; }
