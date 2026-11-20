@@ -153,6 +153,35 @@
     svg.innerHTML = FORMAS[svg.dataset.forma](color, hueco);
   });
 
+  // Figuras con data-completa: en vez de quedar recortadas por el borde de la pantalla,
+  // se corren lo justo para verse enteras y apoyadas en el borde (si son más anchas que la pantalla, se achican)
+  const completas = [...document.querySelectorAll('.fig-fondo[data-completa]')];
+  function acomodarFiguras() {
+    const ancho = document.documentElement.clientWidth;
+    completas.forEach((svg) => {
+      svg.style.translate = ''; svg.style.scale = '';
+      const caja = svg.getBBox(); const ctm = svg.getScreenCTM(); if (!ctm) return;
+      let x0 = ctm.e + caja.x * ctm.a; let x1 = ctm.e + (caja.x + caja.width) * ctm.a;
+      let escala = 1;
+      if (x1 - x0 > ancho) {
+        escala = ancho / (x1 - x0);
+        svg.style.scale = String(escala);
+        const caja2 = svg.getBBox(); const ctm2 = svg.getScreenCTM();
+        x0 = ctm2.e + caja2.x * ctm2.a; x1 = ctm2.e + (caja2.x + caja2.width) * ctm2.a;
+      }
+      let dx = 0;
+      if (x0 < 0) dx = -x0;
+      else if (x1 > ancho) dx = ancho - x1;
+      if (dx) svg.style.translate = `${Math.round(dx)}px 0`;
+    });
+  }
+  if (completas.length) {
+    acomodarFiguras();
+    let espera;
+    window.addEventListener('resize', () => { clearTimeout(espera); espera = setTimeout(acomodarFiguras, 120); });
+    if (document.fonts) document.fonts.ready.then(acomodarFiguras); // el texto puede mover las secciones al cargar la tipografía
+  }
+
   /* ---------- Mobile: menú hamburguesa ---------- */
   const toggle = document.querySelector('.header__toggle');
   if (toggle) {
