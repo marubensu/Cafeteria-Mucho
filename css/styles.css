@@ -660,8 +660,8 @@ html { overflow-x: hidden; }
 body { overflow-x: clip; }
 /* Sin isolation: las figuras quedan en la capa más baja de toda la página, detrás de cards, botones y textos */
 .con-fondo { position: relative; }
-/* El grano junto a la cita de El lugar sale del borde: se recorta para que el celular no achique toda la página */
-main:has(> .fig-fondo--cita) { position: relative; overflow-x: clip; }
+/* Lo que sobresalga por los costados se recorta en el borde de la pantalla (no antes), para que el celular no achique la página */
+body { overflow-x: clip; }
 .fig-fondo {
   position: absolute; z-index: -1; pointer-events: none;
   height: auto; aspect-ratio: 1; overflow: visible;
@@ -1774,7 +1774,7 @@ html.cargando-pago { overflow: hidden; }
   .momentos ul { margin-right: calc(-1 * var(--margen)); padding-right: var(--margen); scroll-padding-left: 0; }
   .metodos { margin-right: calc(-1 * (24px + 1px + var(--margen))); padding-right: calc(24px + var(--margen)); }
   .menu-filtros .filtros__anclas ul { margin-right: -20px; padding-right: 20px; }
-  .fig-fondo.fig-fondo--cita { right: -42vw !important; }
+  .fig-fondo.fig-fondo--cita { right: 0 !important; width: 72vw !important; }
   .metodos::-webkit-scrollbar { display: none; }
   .metodo { flex: 0 0 72%; scroll-snap-align: start; }
   .bloque-foto { padding: 22px; }
